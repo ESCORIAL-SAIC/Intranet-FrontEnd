@@ -1,0 +1,86 @@
+.hero-image{
+    width: 55vw;
+    height: 45vh;
+    object-fit: cover;
+}
+
+.hero-text{
+    font-family: 'Roboto', sans-serif;
+    font-size: 4vh;
+    height: 200px;
+    position: absolute;
+    color: #ffffff;
+    font-weight: 650;
+    margin-left: 4%;
+    top: 27%;
+}
+
+.hero-container{
+    position: relative;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 25px;
+    filter: contrast(0.8);
+    border: 1px solid #ACACAC;
+}
+
+
+
+.img-container{
+    position: relative;
+    float: left;
+}
+
+.slider{
+    overflow: hidden;
+    height: 45vh;
+    width: 100%;
+}
+
+/* ANIMATION SLIDE */
+
+@keyframes slide_animation{
+    0% {left: 0%;}
+    10% {left: 0%;}
+    20% {left: 100%;}
+    30% {left: 100%;}
+    40% {left: 200%;}
+    50% {left: 200%;}
+    60% {left: 100%;}
+    70% {left: 100%;}
+    80% {left: 0%;}
+    90% {left: 0%;}
+    100% {left: 0%;}
+}
+
+@-webkit-keyframes slide_animation{
+    0% {left: 0%;}
+    10% {left: 0%;}
+    20% {left: 100%;}
+    30% {left: 100%;}
+    40% {left: 200%;}
+    50% {left: 200%;}
+    60% {left: 100%;}
+    70% {left: 100%;}
+    80% {left: 0%;}
+    90% {left: 0%;}
+    100% {left: 0%;}
+}
+
+.slider-images{
+    overflow: hidden;
+    height: 45vh;
+    width: 200vw;
+    margin: 0 0 0 -110vw;
+    position: relative;
+    -webkit-animation-name: slide_animation;
+    -webkit-animation-duration: 33s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: alternate;
+    -webkit-animation-play-state: running;
+    animation-name: slide_animation;
+    animation-duration: 33s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-play-state: running;
+}

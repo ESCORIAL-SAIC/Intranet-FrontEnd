@@ -1,0 +1,23 @@
+.main-capacitaciones{
+    display: flex;
+    flex-flow: column;
+}
+
+.main-capacitaciones-container{
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    height: 9vh;
+    border-radius: 20px;
+    background-color: #F4F4F4;
+    box-shadow: 0px 3px 2px #36363659;
+    margin-bottom: 15px;
+}
+
+.main-capacitaciones-cabecera{
+    font-family: 'Inter';
+    font-size: .9vw;
+    font-weight: 800;
+    color: #3C3A3A;
+    padding: 10px 0px 20px 0px;
+}

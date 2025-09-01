@@ -1,0 +1,16 @@
+.titulo-insumos{
+    font-family: 'Inter';
+    font-weight: 800;
+    color: #656565;
+    margin-top: 40px;
+}
+
+.insumos{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    margin: 20px 0px;
+}

@@ -1,0 +1,15 @@
+.indicador-principal{
+    overflow: hidden;
+    height: 60vh;
+    width: 100%;
+    position: relative;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 25px;
+}
+
+.indicador-principal iframe{
+    width: 89%;
+    height: 100%;
+    border: none;
+}

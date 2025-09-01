@@ -1,0 +1,29 @@
+.visualizador{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    display: none;
+}
+
+.backgroud-visualizador{
+    width: 100%;
+    height: 100%;
+    background-color: #0000009e;
+    position: fixed;
+    top: 0px;
+}
+
+.img-container-visualizador{
+    position: fixed;
+    font-family: 'Inter';
+    font-size: 20px;
+}
+
+.img-visualizador{
+    height: 80vh;
+    object-fit: cover;
+}

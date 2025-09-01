@@ -1,0 +1,130 @@
+.lockers-list{
+    display: flex;
+    justify-content: space-around;
+    padding: 4vh 0;
+}
+
+.lockers{
+    display: flex;
+    flex-wrap: wrap;
+    width: 55vw;
+    height: 70vh;
+}
+
+.locker{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 2vw;
+}
+
+.locker-casilla{
+    width: 25px;
+    height: 25px;
+    border: 2px solid #9EC6EC;
+    border-radius: 6px;
+    margin: 3px;
+}
+
+.locker-planta, .locker-codigo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.locker-info{
+    display: none;
+    width: 5vw;
+    height: 5vh;
+    justify-content: space-evenly;
+    background-color: #359eff;
+    color: #ffffff;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: space-around;
+    position: fixed;
+    margin: -55px;
+}
+
+.locker-info:after {
+	border: .5em solid transparent;
+	border-top-color: #359eff;
+	content: '';
+	margin-left: -.5em;
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	width: 0;
+	height: 0;
+}
+
+.locker-linea{
+    background-color: #ffffff;
+    height: 70%;
+    width: .15vw;
+}
+
+.locker-planta-titulo, .locker-codigo-titulo{
+    font-family: 'Inter';
+    font-size: .8vh;
+}
+
+.locker-casilla:hover{
+    background-color: #9EC6EC;
+}
+
+.ocupada{
+    background-color: var(--main-esco-color);
+    border-color: var(--main-esco-color);
+}
+
+.no-disponible{
+    background-color: #7E8286;
+    border-color: #7E8286;
+}
+
+.locker-preview{
+    display: flex;
+    width: 20vw;
+    height: 40vh;
+    border-radius: 14px;
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 36%);
+    flex-direction: column;
+    align-content: center;
+    justify-content: space-between;
+}
+
+.lockers-preview-title{
+    font-family: 'Inter';
+    font-weight: 800;
+    font-size: 2vh;
+    margin-bottom: 4vh;
+}
+
+.planta-title{
+    font-family: 'Inter';
+    font-weight: 800;
+    font-size: 1.4vh;
+    margin-bottom: 2vh;
+}
+
+.desplegable-planta{
+    border: 2px solid #000000;
+    border-radius: 10px;
+    padding: 1vh 0.5vw;
+    width: 100%;
+}
+
+.locker-preview-t{
+    padding: 3vh 2vw;
+}
+
+.locker-preview-detallado{
+    display: flex;
+    justify-content: space-between;
+    height: 15vh;
+    color: white;
+    background-color: var(--main-esco-color);
+    border-radius: 0 0 14px 14px;
+}
+

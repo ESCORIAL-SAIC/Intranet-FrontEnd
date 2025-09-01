@@ -1,0 +1,30 @@
+.App {
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.footer{
+  height:50px; 
+  width:100%; 
+  border-top:1px solid #c5c5c5;
+}
+
+.m-container{
+  display: flex;
+  width: 100%;
+}
+
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

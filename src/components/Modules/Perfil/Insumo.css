@@ -1,0 +1,22 @@
+.insumo{
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+    font-family: 'Roboto';
+    align-items: center;
+}
+
+.insumo-descripcion{
+    font-size: 1.7vh;
+}
+
+.insumo-tipo{
+    display: flex;
+    justify-content: center;
+    width: auto;
+    font-size: 2vh;
+    padding: 3px 7px;
+    border-radius: 20px;
+    background-color: #000000;
+    color: #ffffff;
+}

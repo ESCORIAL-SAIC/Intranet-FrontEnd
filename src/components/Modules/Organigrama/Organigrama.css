@@ -1,0 +1,123 @@
+.container{
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 130px);
+  flex-direction: column;
+  margin-left: 3rem;
+}
+
+.Organigrama{
+    width: 100%;
+}
+
+.svg-chart-container{
+  height: calc(100vh - 180px);
+}
+
+.infoBox, .infoBox-Okr{
+    visibility: hidden;
+    transition: visibility 0s, opacity 0.5s linear;
+    opacity: 0;
+    width: 220px;
+    height: 80px;
+    position: absolute;
+    border-radius: 8px;
+    background-color: #fffffff0;
+    border: 1px solid #fffffff0;
+    background-color:#FFFFFF; 
+    border-radius:10px;
+    border: 1px solid #aeaeae
+  }
+  
+  .infoBox-Okr{
+    margin-left: 215px;
+  }
+  
+  .infoBox-on{
+    transition: 0.5s;
+    opacity: 1;
+    visibility: visible;
+    height: auto;
+  }
+  
+  .infoText, .infoText-Okr{
+    font-family: 'Inter', sans-serif;
+    font-size:14px;padding:5px;color: #777777;
+  }
+  
+  .infoText-Okr, .infoText-Linkedin{
+    display: none;
+  }
+  
+  .botonMenu{
+    color: #ffffff;
+    background-color: #64a2ff;
+    border: 2px solid #64a2ff;
+    box-shadow: 1.5px 2px #adadad75;
+    border-radius: 10px;
+    padding: 2px;
+    font-weight: 600;
+    width: 10px;
+    height: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+  
+  .contenidoOkr{
+    /*display: none;
+    padding: 10px;*/
+    background: #e7e7e7;
+    border-bottom: 1px solid #aeaeae;
+    transition: max-height 0.5s ease-in, max-height 0.4s ease-out, visibility 0.9s ease-in, visibility 0s ease-out;
+    max-height: 0;
+    visibility: hidden;
+    display: block;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+  }
+  
+  .on{
+    max-height: 500px;
+    visibility: visible;
+    padding: 10px;
+  }
+  
+  .linkedinLink{
+    text-decoration: none;
+  }
+  
+  
+  
+  .container-okr{
+    padding: 10px;
+    background: #ffffff;
+    border-radius: 10px;
+    margin: 10px 0px 10px 0px;
+  }
+  
+  .titulo-okr{
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--main-esco-color);
+  }
+  
+  .titulo-okr, .descripcion-okr, .kpi-okr, .fecha-okr{
+    padding: 10px 0px 10px 0px;
+  }
+  
+  .kpi-okr, .fecha-okr{
+    font-weight: 800;
+  }
+
+  .fecha-organigrama{
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    max-height: 3vh;
+  }

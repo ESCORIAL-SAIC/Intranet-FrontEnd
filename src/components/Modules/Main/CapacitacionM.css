@@ -1,0 +1,59 @@
+.main-capacitacion{
+    display: flex;
+    font-family: 'Inter';
+    align-items: center;
+    width: 100%;
+    padding: 10px 0px 10px 35px;
+}
+
+.main-capacitacion:first-child, .main-capacitacion:nth-child(2){
+    border-right: 1px solid;
+}
+
+
+.main-capacitacion-fecha{
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+    font-weight: 800;
+    padding-right: 14px;
+}
+
+.main-capacitacion-dia{
+    font-size: 2.1vw;
+}
+
+.main-capacitacion-mes{
+    font-size: 1.1vw;
+}
+
+.main-capacitacion-dia, .main-capacitacion-mes{
+    margin: 0;
+}
+
+.main-capacitacion-descripcion{
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.main-capacitacion-lugar{
+    display: flex;
+    margin-top: 10px;
+}
+
+.main-capacitacion-lugar-descripcion{
+    font-size: 11px;
+}
+
+.circulo{
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #ffb011;
+    margin-right: 5px;
+}
+
+.main-capacitacion-izq{
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,27 @@
+.tarea-c{
+    display: flex;
+    justify-content: space-between;
+    border-radius: 15px;
+    height: 6vh;
+    align-items: center;
+    flex-direction: row;
+    font-family: 'Inter';
+}
+
+.tarea-tipo{
+    font-size: 1vw;
+    color: #7d7d7d;
+}
+
+.tarea-cantidad{
+    display: flex;
+    background-color: #fac73c;
+    border-radius: 30px;
+    font-size: .8vw;
+    padding: 3px;
+    color: #ffffff;
+    width: 3vh;
+    height: 3vh;
+    align-items: center;
+    justify-content: center;
+}

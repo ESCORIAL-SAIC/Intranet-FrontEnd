@@ -1,0 +1,19 @@
+.listado-tareas-pendientes{
+    margin-top: 10vh;
+}
+
+.titulo-tareas-pendientes, .titulo-acceso-indicadores{
+    font-family: 'Inter';
+    font-weight: 800;
+    color: #656565;
+}
+
+.tareas{
+    height: calc(100vh - 90px);
+    overflow: auto;
+    font-family: 'Roboto';
+}
+
+.tareas::-webkit-scrollbar{
+    width: 0;
+}

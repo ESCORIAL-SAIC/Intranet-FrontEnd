@@ -1,0 +1,26 @@
+.main-button-bar{
+    height: 3.7vh;
+    padding: 5px 7px 5px 12px;
+    margin: 12px 0px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    background-color: #F4F4F4;
+    border-radius: 20px;
+    box-shadow: 0px 3px 2px #36363659;
+}
+
+.main-button-bar-icon{
+    filter: opacity(0.7);
+    font-size: 1.4vw;
+}
+
+.main-button-bar-text{
+    padding-top: 2px; 
+    padding-left: 12px;
+    font-size: .7vw;
+    font-family: 'Inter', sans-serif; 
+    display: flex; 
+    height: auto; 
+}

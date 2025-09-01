@@ -1,0 +1,206 @@
+.frame{
+    height: calc(100vh - 180px);
+    width: calc(100% - 1px);
+    border: none;
+    margin-left: 1px;
+}
+
+.visualizador-carga-estudios{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+}
+
+.acceso-registro-estudios{
+    text-decoration: none;
+    background-color: #735CFF;
+    border-radius: 20px;
+    color: #fff;
+    display: flex;
+    font-family: Inter;
+    font-size: 1vw;
+    font-weight: 800;
+    height: 9vh;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.acceso-registro-flecha{
+    display: flex;
+    align-items: center;
+    position: relative;
+    font-family: 'Inter';
+    font-size: 1.6vh;
+    font-weight: 800;
+    border: 2px solid #ffffff;
+    padding: 0.5vh;
+    border-radius: 0px 15px 15px 0px;
+    color: #735CFF;
+    background-color: #ffffff;
+    text-decoration: none;
+    height: 88%;
+}
+
+.acceso-registro-estudios-texto{
+    font-size: 1.7vh;
+    color: #ffffff;
+}
+
+.icono-registro-estudios{
+    font-size: 3.3vh;
+    padding: 1vw;
+}
+
+.visualizador-carga-estudios-contenido{
+    position: fixed;
+    background-color: #E1E1E1;
+    width: 65vw;
+    height: 70vh;
+    border-radius: 35px;
+    font-family: 'Inter';
+}
+
+.visualizador-carga-estudios-c::-webkit-scrollbar{
+    width: 0;
+}
+
+.listado-estudios{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.titulo-carga-estudios{
+    display: flex;
+    padding-left: 3vw;
+    font-size: 2vh;
+    color: #ffffff;
+    background-color: var(--main-esco-color);
+    height: 8vh;
+    border-radius: 30px 30px 0px 0px;
+    align-items: center;
+}
+
+.estudio-icono-container{
+    display: flex;
+    background-color: #ffffff;
+    border-radius: 7px;
+    box-shadow: 2px 2px 3px 0px #c1c1c14d;
+    margin: 0.5vw 0.5vw 0 0;
+    width: 2.8vw;
+    height: 2.8vw;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-decoration: none;
+    border: none;
+}
+
+.estudios-icono{
+    color: #bdbdbd;
+    font-size: 3vh;
+    font-weight: 800;
+    padding: 10px;
+}
+
+.estudio-desplegable-progreso, .estudio-desplegable-tipo, .estudio-completable{
+    height: 2.8vw;
+    border: none;
+    margin: .5vw .5vw 0 0;
+    border-radius: 7px;
+    box-shadow: 2px 2px 3px 0px #c1c1c14d;
+    color: #a5a5a5;
+    font-family: 'Inter';
+    font-weight: 800;
+    font-size: 1.6vh;
+}
+
+.estudio-desplegable-tipo{
+    width: 15vw;
+}
+
+.estudio-desplegable-progreso{
+    width: 10vw;
+}
+
+.estudio-completable{
+    width: 30vw;
+}
+
+.estudio-botones{
+    display: flex;
+    flex-direction: row;
+}
+
+.visualizador-carga-estudios-c{
+    display: flex;
+    flex-direction: column;
+    padding: 1vw 4vw;
+    overflow-y: auto;
+    height: 55vh;
+}
+
+.visualizador-estudios-titulos{
+    display: flex;
+    flex-direction: row;
+}
+
+.titulo-progreso-estudio{
+    width: 10vw;
+}
+
+.titulo-tipo-estudio{
+    width: 15.5vw;
+}
+
+.titulo-estudio{
+    width: 30.5vw;
+}
+
+.titulo-progreso-estudio, .titulo-tipo-estudio, .titulo-estudio{
+    font-weight: 800;
+    font-family: 'Inter';
+    color: #898989;
+}
+
+.estudio-boton-confirmar{
+    display: flex;
+    justify-content: center;
+    font-size: 1.4vh;
+    margin: 2vh 0vh;
+    background-color: var(--main-esco-color);
+    color: #ffffff;
+    border: none;
+    padding: 0.7em;
+    width: 25vh;
+    border-radius: 50px;
+    text-decoration: none;
+}
+
+.error-estudios{
+    width: 325px;
+    padding-bottom: 15px;
+    color: #fd4b4b;
+    font-family: 'Roboto';
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.visualizador-carga-estudios-finalizada{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 88%;
+}
+
+.carga-estudios-finalizada-texto{
+    font-family: 'Inter';
+    font-size: 3vh;
+    color: #9f9f9f;
+}

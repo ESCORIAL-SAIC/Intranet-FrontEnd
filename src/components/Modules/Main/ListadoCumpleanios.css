@@ -1,0 +1,20 @@
+.cum-header{
+    display: flex;
+    font-family: 'Inter';
+    font-weight: 800;
+    font-size: 1vw;
+    align-items: center;
+    justify-content: center;
+    height: 5vh;
+    border-radius: 20px;
+    background-color: #2B74B7;
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+
+.cum-content{
+    height: auto;
+    border-radius: 20px;
+    background-color: #F4F4F4;
+    box-shadow: 0px 3px 2px #36363659;
+}

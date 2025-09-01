@@ -1,0 +1,45 @@
+.capacitacion{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    font-family: 'Inter';
+}
+
+.capacitacion-top{
+    display: flex;
+}
+
+.capacitacion-nombre{
+    font-size: .9vw;
+}
+
+.capacitacion-bot{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.capacitacion-puesto{
+    color: var(--main-esco-color);
+    border: 1px solid;
+    font-size: .6vw;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 5px;
+
+}
+
+.capacitacion-fecha{
+    background-color: #fac73c;
+    border-radius: 10px;
+    font-size: .8vw;
+    padding: 3px;
+    color: #ffffff;
+}
+
+.capacitacion-insignia{
+    color: #fac73c;
+    font-size: 5vh;
+    margin-top: 1vh;
+}

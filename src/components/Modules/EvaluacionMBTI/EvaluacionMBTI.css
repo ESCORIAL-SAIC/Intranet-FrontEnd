@@ -1,0 +1,44 @@
+.pantalla-carga{
+    display: flex;
+    z-index: 2;
+    position: absolute;
+    background-color: #e3e3e3db;
+    width: calc(100% - 1px);
+    height: calc(100vh - 180px);
+    align-items: center;
+    justify-content: center;
+}
+
+.loader {
+  width: 160px;
+  height: 12px;
+  border-radius: 20px;
+  color: var(--main-esco-color);
+  border: 2px solid;
+  position: relative;
+}
+.loader::before {
+  content: "";
+  position: absolute;
+  margin: 2px;
+  inset: 0 100% 0 0;
+  border-radius: inherit;
+  background: currentColor;
+  animation: l6 2s infinite;
+}
+
+.translated-ltr body iframe {
+    display: none;
+}
+
+/* LISTADO EVALUACIONES */
+
+.listado-evaluaciones-mbti{
+    display: flex;
+    flex-direction: row;
+}
+
+
+@keyframes l6 {
+    100% {inset:0}
+}

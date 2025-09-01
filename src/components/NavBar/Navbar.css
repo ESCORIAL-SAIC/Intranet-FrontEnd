@@ -1,0 +1,68 @@
+.header{
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--main-esco-color);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    height: 10vh;
+    z-index: 2;
+}
+
+.img-logo{
+    filter: brightness(0) invert(1);
+    width: 9vw;
+    margin-left: 5vh;
+}
+
+.user-text{
+    font-family: 'Inter';
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 4px 4px #36363675;
+    background-color: white;
+    color: var(--main-esco-color);
+    margin-right: 50px;
+    padding: 4px;
+    border: 2px solid white;
+    border-radius: 10px;
+}
+
+.button-logout{
+    font-family: 'Inter';
+    font-weight: 700;
+    font-size: 1.4vh;
+    border: 2px solid #ffffff;
+    border-radius: 4vh;
+    background-color: var(--main-esco-color);
+    padding: 0.7vh 3vh;
+    margin-right: 2vh;
+    color: #ffffff;
+}
+
+.nav-usuario-cont{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img-usuario{
+    width: 4vh;
+    height: 4vh;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+}
+
+.nav-usuario{
+    font-family: 'Inter';
+    font-size: 2.3vh;
+    color: #ffffff;
+    padding: 0px 2vh;
+}
+
+.nav-usuario{
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}

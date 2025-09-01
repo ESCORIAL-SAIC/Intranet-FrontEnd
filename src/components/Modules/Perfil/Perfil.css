@@ -1,0 +1,41 @@
+.perfil{
+    display: flex;
+    flex-direction: column;
+    background-color: #f6f6f6;
+}
+
+.perfil-container-left{
+    display: flex;
+    flex-direction: column;
+    width: 35vh;
+}
+
+.perfil-container-right{
+    width: 75%;
+}
+
+.perfil-container{
+    display: flex;
+    justify-content: space-around;
+    padding: 0 30px;
+    margin-bottom: 40px;
+}
+
+.titulo-accesos{
+    font-family: 'Inter';
+    font-weight: 800;
+    color: #656565;
+    margin-top: 40px;
+}
+
+.perfil-container-left .main-menu-bar .main-button-bar{
+    background-color: #ffffff;
+    height: 4.2vh;
+}
+
+.top-image{
+    height: 30vh;
+    width: 100%;
+    object-fit: cover;
+    filter: contrast(0.8);
+}

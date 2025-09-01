@@ -1,0 +1,99 @@
+.tarea{
+    display: flex;
+    justify-content: space-between;
+    background-color: #ffffff;
+    border-radius: 15px;
+    height: 9vh;
+    align-items: center;
+    flex-direction: row;
+    margin: 20px 0px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.tarea-info{
+    display: flex;
+    flex-direction: column;
+    width: 40vh;
+}
+
+.tarea-descripcion{
+    width: 40vh;
+    color: #909090;
+}
+
+.tarea-numero{
+    font-size: 2.1vh;
+    color: #909090;
+}
+
+.semaforo-circulo{
+    width: 4vh;
+    height: 4vh;
+    background-color: #c0c0c0;
+    border-radius: 50%;
+    margin-left: 30px;
+    margin-right: 20px;
+}
+
+.tarea-flag{
+    background-color: #e6e6e6;
+    border-radius: 5px;
+    color: #555;
+    font-size: 1.8vh;
+    padding: 4px 12px;
+    width: 13vh;
+    text-align: center;
+    margin-right: 30px;
+}
+
+.s-csc{
+    background-color: #ffba52;
+}
+
+.s-oc{
+    background-color: #ffdc14;
+}
+
+.s-req{
+    background-color: #69b7ff;
+}
+
+.s-sc{
+    background-color: #69ffcd;
+}
+
+.s-sist{
+    background-color: #aa41ff;
+}
+
+.s-adec{
+    background-color: #5a14ff;
+}
+
+.s-rqper{
+    background-color: #ff5ec1;
+}
+
+.s-repper{
+    background-color: #ff3a7c;
+}
+
+.s-cu{
+    background-color: var(--main-esco-color);
+}
+
+
+.aprobar-boton{
+    position: relative;
+    font-family: 'Inter';
+    font-size: 1.6vh;
+    font-weight: 800;
+    border: 2px solid #ae55f4;
+    padding: 0.5vh;
+    border-radius: 0px 15px 15px 0px;
+    color: #ffffff;
+    writing-mode: vertical-lr;
+    background-color: #ae55f4;
+    text-decoration: none;
+}
+
