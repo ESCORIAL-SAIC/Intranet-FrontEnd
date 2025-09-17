@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { render } from 'react-dom';
 import { OrgChartComponent } from './OrgChart';
 import * as d3 from 'd3';
-import csv from './organigrama.csv';
+import csv from './organigrama-adm.csv';
 import './Organigrama.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
