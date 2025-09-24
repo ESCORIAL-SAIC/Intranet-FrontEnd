@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import './Empleado.css';
 import axios from "axios";
 
 function Empleado(){
@@ -47,6 +48,7 @@ function Empleado(){
             })
             const jsonData = await response.json();
             setEmpleado(jsonData);
+            console.log(jsonData);
         } catch (err) {
             console.log(err.message)
         }
@@ -71,12 +73,31 @@ function Empleado(){
             <p className="seccion-titulo">EMPLEADO</p>
         </div>
         <div className="legajo-empleado">
-            <div className="plan-capacitacion-contenido">
-                {empleado.propuesta}
+            <div className="empleado-detalle">
+                <div className="empleado-detalle-left">
+                    <div className="empleado-nombre"></div>
+                    <div className="empleado-legajo"></div>
+                </div>
+                <div className="empleado-detalle-right">
+                    <div className="empleado-detalle-titulo">Puesto: </div>
+                    <div className="empleado-detalle-titulo">Sector: </div>
+                    <div className="empleado-detalle-titulo">Gerencia: </div>
+                </div>
             </div>
-            
+            <div className="empleado-solapa-principal">
+                <div className="empleado-selector">
+                    <div className="empleado-selector-boton">Puesto</div>
+                    <div className="empleado-selector-boton">Desempeño</div>
+                    <div className="empleado-selector-boton">Encuestas</div>
+                </div>
+                <div className="empleado-solapa-contenido">
+                    <div className="plan-capacitacion-contenido">
+                        {empleado.propuesta}
+                    </div>
+                </div>
+            </div>           
             {
-                Object.keys(empleado).length <= 0 
+                /*Object.keys(empleado).length <= 0 
                         ? (
                             loading
                             ? <div className="buscar-loading">Cargando...</div> 
@@ -85,6 +106,7 @@ function Empleado(){
                             </a></div>
                         )
                         : <></>
+                */
             }
             
         </div>

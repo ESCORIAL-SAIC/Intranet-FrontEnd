@@ -45,9 +45,13 @@ function LegajoEmpleado(){
         <div className="legajos-empleados">
         {
             empleados.map(empleado => (
-                <a href={"/empleado/"+empleado.empleado_id} className="">
-                    <div className="">{empleado.empleado}</div>
-                    <div className="">{empleado.legajo}</div>
+                <a href={"/empleado/"+empleado.empleado_id} className="item-empleado">
+                    <div className="item-empleado-img"></div>
+                    <div className="item-empleado-detalle">
+                        <div className="item-empleado-nombre">{empleado.empleado}</div>
+                        <div className="item-empleado-puesto">Puesto: </div>
+                    </div>
+                    <div className="item-empleado-legajo">{empleado.legajo}</div>
                 </a>
             ))
         }
