@@ -75,13 +75,13 @@ function Empleado(){
         <div className="legajo-empleado">
             <div className="empleado-detalle">
                 <div className="empleado-detalle-left">
-                    <div className="empleado-nombre"></div>
-                    <div className="empleado-legajo"></div>
+                    <div className="empleado-nombre">{empleado.empleado}</div>
+                    <div className="empleado-legajo">{empleado.legajo}</div>
                 </div>
                 <div className="empleado-detalle-right">
-                    <div className="empleado-detalle-titulo">Puesto: </div>
-                    <div className="empleado-detalle-titulo">Sector: </div>
-                    <div className="empleado-detalle-titulo">Gerencia: </div>
+                    <div className="empleado-detalle-titulo">Puesto: {empleado.puesto}</div>
+                    <div className="empleado-detalle-titulo">Sector: {empleado.sector}</div>
+                    <div className="empleado-detalle-titulo">Gerencia: {empleado.gerencia}</div>
                 </div>
             </div>
             <div className="empleado-solapa-principal">

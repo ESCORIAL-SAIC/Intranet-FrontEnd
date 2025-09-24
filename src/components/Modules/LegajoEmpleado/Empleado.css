@@ -45,3 +45,40 @@
     font-size: 2.1vh;
     font-weight: 800;
 }
+
+.empleado-detalle{
+    display: flex;
+    justify-content: space-between;
+    padding: 3vh;
+}
+
+.empleado-detalle-left{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.empleado-detalle-right{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.empleado-nombre{
+    width: 10vw;
+    font-size: 2.5vh;
+    font-weight: 700;
+}
+
+.empleado-legajo{
+    display: flex;
+    height: 4vh;
+    width: 7vw;
+    border-radius: 20px;
+    background-color: #545454;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 2.4vh;
+    justify-content: center;
+    align-items: center;
+}
