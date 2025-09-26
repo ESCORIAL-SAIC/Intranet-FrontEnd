@@ -29,7 +29,9 @@ const OrganigramaAdm = (props) => {
         csv
       ).then((data) => {
         setData(data);
-        setFecha(data[0].actualizado);
+        data[0]
+        ?setFecha(data[0].actualizado)
+        :setFecha('-');
       });
     }).catch(err => {
         navigate('/')

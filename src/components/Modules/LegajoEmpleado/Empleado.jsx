@@ -86,16 +86,17 @@ function Empleado(){
             </div>
             <div className="empleado-solapa-principal">
                 <div className="empleado-selector">
-                    <div className="empleado-selector-boton">Puesto</div>
-                    <div className="empleado-selector-boton">Desempeño</div>
-                    <div className="empleado-selector-boton">Encuestas</div>
+                    <a href="#" className="empleado-selector-boton">Puesto</a>
+                    <a href="#" className="empleado-selector-boton">Desempeño</a>
+                    <a href="#" className="empleado-selector-boton">Encuestas</a>
                 </div>
                 <div className="empleado-solapa-contenido">
                     <div className="plan-capacitacion-contenido">
                         {empleado.propuesta}
                     </div>
                 </div>
-            </div>           
+            </div>    
+                
             {
                 /*Object.keys(empleado).length <= 0 
                         ? (

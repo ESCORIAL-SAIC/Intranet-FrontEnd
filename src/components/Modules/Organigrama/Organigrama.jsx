@@ -30,7 +30,9 @@ const Organigrama = (props) => {
       csv
     ).then((data) => {
       setData(data);
-      setFecha(data[0].actualizado)
+      data[0]
+      ?setFecha(data[0].actualizado)
+      :setFecha('-');
     });
   }, [true]);
   return (
