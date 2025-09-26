@@ -2,6 +2,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import './Empleado.css';
 import axios from "axios";
+import EmpleadoPuesto from './EmpleadoPuesto';
+import EmpleadoDesempenio from './EmpleadoDesempenio';
+import EmpleadoEncuesta from './EmpleadoEncuestas';
 
 function Empleado(){
 
@@ -9,6 +12,7 @@ function Empleado(){
     let { id } = useParams();
     const [empleado, setEmpleado] = useState({});
     const [loading, setLoading] = useState(false);
+    const [activeTab, setActiveTab] = useState('puesto');
 
     const cargarPlan = async () => {
         try {
@@ -86,14 +90,32 @@ function Empleado(){
             </div>
             <div className="empleado-solapa-principal">
                 <div className="empleado-selector">
-                    <a href="#" className="empleado-selector-boton">Puesto</a>
-                    <a href="#" className="empleado-selector-boton">Desempeño</a>
-                    <a href="#" className="empleado-selector-boton">Encuestas</a>
+                    <a href="#" 
+                        className={`empleado-selector-boton ${activeTab === 'puesto' ? 'active' : ''}`}
+                        onClick={(e) => {e.preventDefault(); setActiveTab('puesto');}}>
+                        Puesto
+                    </a>
+                    <a href="#" 
+                        className={`empleado-selector-boton ${activeTab === 'desempenio' ? 'active' : ''}`}
+                        onClick={(e) => {e.preventDefault(); setActiveTab('desempenio');}}>
+                        Desempeño
+                    </a>
+                    <a href="#" 
+                        className={`empleado-selector-boton ${activeTab === 'encuestas' ? 'active' : ''}`}
+                        onClick={(e) => {e.preventDefault(); setActiveTab('encuestas');}}>
+                        Encuestas
+                    </a>
+                    <a href="#" 
+                        className={`empleado-selector-boton ${activeTab === 'plancap' ? 'active' : ''}`}
+                        onClick={(e) => {e.preventDefault(); setActiveTab('plancap');}}>
+                        Encuestas
+                    </a>
                 </div>
                 <div className="empleado-solapa-contenido">
-                    <div className="plan-capacitacion-contenido">
-                        {empleado.propuesta}
-                    </div>
+                    {activeTab === 'puesto' && <EmpleadoPuesto empleado={empleado} />}
+                    {activeTab === 'desempenio' && <EmpleadoDesempenio empleado={empleado} />}
+                    {activeTab === 'encuestas' && <EmpleadoEncuesta empleado={empleado} />}
+                    {activeTab === 'plancap' && <EmpleadoEncuesta empleado={empleado} />}
                 </div>
             </div>    
                 
