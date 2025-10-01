@@ -87,3 +87,8 @@
     border: 3px solid #44A2F9;
     border-radius: 20px;
 }
+
+.empleado-selector-boton.active {
+    border: 3px solid #44A2F9;
+    border-radius: 20px;
+}

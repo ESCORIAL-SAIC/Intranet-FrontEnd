@@ -5,6 +5,7 @@ import axios from "axios";
 import EmpleadoPuesto from './EmpleadoPuesto';
 import EmpleadoDesempenio from './EmpleadoDesempenio';
 import EmpleadoEncuesta from './EmpleadoEncuestas';
+import EmpleadoPlanCapacitacion from "./EmpleadoPlanCapacitacion";
 
 function Empleado(){
 
@@ -13,6 +14,7 @@ function Empleado(){
     const [empleado, setEmpleado] = useState({});
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('puesto');
+    const [evaluaciones, setEvaluaciones] = useState([])
 
     const cargarPlan = async () => {
         try {
@@ -41,13 +43,30 @@ function Empleado(){
         }
     }
 
+    const getEvaluaciones = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(process.env.REACT_APP_BASE_URL+'/evaluacion-desempenio-completas-p',{
+                headers: {
+                    Authorization: token,
+                    Empleado_id: id
+                }
+            })
+            const jsonData = await response.json();
+            setEvaluaciones(jsonData); 
+            console.log(jsonData)
+        } catch (err) {
+            console.log(err.message)
+        }
+    }
+
     const obtenerPlan = async () => {
         try {
             const token = localStorage.getItem('token');
             const response = await fetch(process.env.REACT_APP_BASE_URL+"/plan-capacitacion",{
                 headers: {
                     Authorization: token,
-                    Empleado_id: id
+                    empleado_id: id
                 }
             })
             const jsonData = await response.json();
@@ -68,6 +87,7 @@ function Empleado(){
             navigate('/login')
         })
         obtenerPlan();
+        getEvaluaciones();
       }, []);    
 
     return(
@@ -108,14 +128,14 @@ function Empleado(){
                     <a href="#" 
                         className={`empleado-selector-boton ${activeTab === 'plancap' ? 'active' : ''}`}
                         onClick={(e) => {e.preventDefault(); setActiveTab('plancap');}}>
-                        Encuestas
+                        Capacitacion
                     </a>
                 </div>
                 <div className="empleado-solapa-contenido">
                     {activeTab === 'puesto' && <EmpleadoPuesto empleado={empleado} />}
                     {activeTab === 'desempenio' && <EmpleadoDesempenio empleado={empleado} />}
                     {activeTab === 'encuestas' && <EmpleadoEncuesta empleado={empleado} />}
-                    {activeTab === 'plancap' && <EmpleadoEncuesta empleado={empleado} />}
+                    {activeTab === 'plancap' && <EmpleadoPlanCapacitacion empleado={empleado} propuesta={empleado.propuesta}/>}
                 </div>
             </div>    
                 
