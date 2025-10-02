@@ -20,6 +20,7 @@
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     padding: 2vh;
+    min-height: 60vh;
 }
 
 .empleado-detalle{
@@ -91,4 +92,14 @@
 .empleado-selector-boton.active {
     border: 3px solid #44A2F9;
     border-radius: 20px;
+}
+
+.empleado-solapa-contenido{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.empleado-puesto{
+    width: 100%;
 }

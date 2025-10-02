@@ -64,7 +64,7 @@ function Empleado(){
     const getEvaluaciones = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(process.env.REACT_APP_BASE_URL+'/evaluacion-desempenio-completas-p',{
+            const response = await fetch(process.env.REACT_APP_BASE_URL+'/empleado-desempenio',{
                 headers: {
                     Authorization: token,
                     Empleado_id: id
@@ -150,7 +150,7 @@ function Empleado(){
                     </a>
                 </div>
                 <div className="empleado-solapa-contenido">
-                    {activeTab === 'desempenio' && <EmpleadoDesempenio empleado={empleado} />}
+                    {activeTab === 'desempenio' && <EmpleadoDesempenio evaluaciones={evaluaciones} />}
                     {activeTab === 'encuestas' && <EmpleadoEncuesta empleado={empleado} />}
                     {activeTab === 'plancap' && <EmpleadoPlanCapacitacion empleado={empleado} propuesta={empleado.propuesta}/>}
                     {activeTab === 'puesto' && <EmpleadoPuesto puesto={puesto} />}
