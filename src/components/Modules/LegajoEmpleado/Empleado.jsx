@@ -13,8 +13,26 @@ function Empleado(){
     let { id } = useParams();
     const [empleado, setEmpleado] = useState({});
     const [loading, setLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState('puesto');
+    const [activeTab, setActiveTab] = useState('desempenio');
     const [evaluaciones, setEvaluaciones] = useState([])
+    const [puesto, setPuesto] = useState('');
+
+    const getPuesto = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(process.env.REACT_APP_BASE_URL+"/empleado-puesto",{
+                headers: {
+                    Authorization: token,
+                    Empleado_id: id
+                }
+            })
+            const jsonData = await response.json();
+            const raw = String.fromCharCode.apply(null, new Uint8Array(jsonData[0].puesto.data));
+            setPuesto(btoa(raw));
+        } catch (err) {
+            console.log(err.message)
+        }  
+    }
 
     const cargarPlan = async () => {
         try {
@@ -68,10 +86,9 @@ function Empleado(){
                     Authorization: token,
                     empleado_id: id
                 }
-            })
+            });
             const jsonData = await response.json();
-            setEmpleado(jsonData);
-            console.log(jsonData);
+            setEmpleado(jsonData);        
         } catch (err) {
             console.log(err.message)
         }
@@ -87,6 +104,7 @@ function Empleado(){
             navigate('/login')
         })
         obtenerPlan();
+        getPuesto();
         getEvaluaciones();
       }, []);    
 
@@ -111,11 +129,6 @@ function Empleado(){
             <div className="empleado-solapa-principal">
                 <div className="empleado-selector">
                     <a href="#" 
-                        className={`empleado-selector-boton ${activeTab === 'puesto' ? 'active' : ''}`}
-                        onClick={(e) => {e.preventDefault(); setActiveTab('puesto');}}>
-                        Puesto
-                    </a>
-                    <a href="#" 
                         className={`empleado-selector-boton ${activeTab === 'desempenio' ? 'active' : ''}`}
                         onClick={(e) => {e.preventDefault(); setActiveTab('desempenio');}}>
                         Desempeño
@@ -130,12 +143,17 @@ function Empleado(){
                         onClick={(e) => {e.preventDefault(); setActiveTab('plancap');}}>
                         Capacitacion
                     </a>
+                    <a href="#" 
+                        className={`empleado-selector-boton ${activeTab === 'puesto' ? 'active' : ''}`}
+                        onClick={(e) => {e.preventDefault(); setActiveTab('puesto');}}>
+                        Puesto
+                    </a>
                 </div>
                 <div className="empleado-solapa-contenido">
-                    {activeTab === 'puesto' && <EmpleadoPuesto empleado={empleado} />}
                     {activeTab === 'desempenio' && <EmpleadoDesempenio empleado={empleado} />}
                     {activeTab === 'encuestas' && <EmpleadoEncuesta empleado={empleado} />}
                     {activeTab === 'plancap' && <EmpleadoPlanCapacitacion empleado={empleado} propuesta={empleado.propuesta}/>}
+                    {activeTab === 'puesto' && <EmpleadoPuesto puesto={puesto} />}
                 </div>
             </div>    
                 

@@ -1,8 +1,10 @@
+import React, { useState, useEffect } from 'react';
+
 function EmpleadoPuesto(props) {
+
     return (
         <div className="empleado-puesto">
-            <div>Puesto: </div>
-            <div>Descripcion: </div>
+            <iframe src={'data:application/pdf;base64,' + props.puesto} className='empleado-puesto-frame'/>
         </div>
     );
 }
