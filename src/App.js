@@ -24,6 +24,7 @@ import EvaluacionMBTI from './components/Modules/EvaluacionMBTI/EvaluacionMBTI';
 import ListadoEvaluacionesMBTI from './components/Modules/EvaluacionMBTI/ListadoEvaluacionesMBTI';
 import LegajoEmpleado from './components/Modules/LegajoEmpleado/LegajoEmpleado';
 import Empleado from './components/Modules/LegajoEmpleado/Empleado';
+import Encuesta from './components/Modules/LegajoEmpleado/Encuesta/Encuesta';
 
 
 function App() {
@@ -58,6 +59,7 @@ function App() {
           <Route path="/listado-evaluaciones-mbti" element={<div className='m-container'><MenuBar/><ListadoEvaluacionesMBTI/></div>}></Route>
           <Route path="/legajo-empleado" element={<div className='m-container'><MenuBar/><LegajoEmpleado/></div>}></Route>
           <Route path="/empleado/:id" element={<div className='m-container'><MenuBar/><Empleado/></div>}></Route>
+          <Route path="/encuesta-empleado/:id" element={<div className='m-container'><MenuBar/><Encuesta/></div>}></Route>
         </Routes>
       </div>    
       

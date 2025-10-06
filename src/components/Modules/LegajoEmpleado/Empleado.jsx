@@ -15,6 +15,7 @@ function Empleado(){
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('desempenio');
     const [evaluaciones, setEvaluaciones] = useState([])
+    const [encuestas, setEncuestas] = useState([])
     const [puesto, setPuesto] = useState('');
 
     const getPuesto = async () => {
@@ -61,6 +62,24 @@ function Empleado(){
         }
     }
 
+    const getEncuestas = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(process.env.REACT_APP_BASE_URL+'/empleado-cuestionarios',{
+                headers: {
+                    Authorization: token,
+                    Empleado_id: id
+                }
+            })
+            const jsonData = await response.json();
+            setEncuestas(jsonData); 
+            console.log(jsonData)
+        } catch (err) {
+            console.log(err.message)
+        }
+    }
+
+
     const getEvaluaciones = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -106,6 +125,7 @@ function Empleado(){
         obtenerPlan();
         getPuesto();
         getEvaluaciones();
+        getEncuestas();
       }, []);    
 
     return(
@@ -151,7 +171,7 @@ function Empleado(){
                 </div>
                 <div className="empleado-solapa-contenido">
                     {activeTab === 'desempenio' && <EmpleadoDesempenio evaluaciones={evaluaciones} />}
-                    {activeTab === 'encuestas' && <EmpleadoEncuesta empleado={empleado} />}
+                    {activeTab === 'encuestas' && <EmpleadoEncuesta encuestas={encuestas} />}
                     {activeTab === 'plancap' && <EmpleadoPlanCapacitacion empleado={empleado} propuesta={empleado.propuesta}/>}
                     {activeTab === 'puesto' && <EmpleadoPuesto puesto={puesto} />}
                 </div>

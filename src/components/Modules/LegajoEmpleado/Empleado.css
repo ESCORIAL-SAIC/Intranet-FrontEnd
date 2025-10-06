@@ -103,3 +103,22 @@
 .empleado-puesto{
     width: 100%;
 }
+
+.encuesta-tarjeta{
+    display: flex;
+    flex-direction: row;
+    width: 55vh;
+    height: 14vh;
+    box-shadow: 4px 4px 8px 0px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    font-family: 'Inter';
+    margin: 20px 4vh;
+    text-decoration: none;
+    background-color: #553eb9;
+    color: #ffffff;
+    align-items: center;
+}
+
+.encuesta-tarjeta .evaluacion-icono{
+    color: #553eb9;
+}
