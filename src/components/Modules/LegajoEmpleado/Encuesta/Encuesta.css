@@ -1,19 +1,22 @@
 .encuesta-empleado{
+    display: flex;
     padding: 2vh 2vw;
     overflow-y: auto;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .encuesta-empleado-row{
     display: flex;
     flex-direction: column;
-    width: 80vw;
+    width: 45vw;
     font-family: 'Inter';
     margin-bottom: 1.5vh;
 }
 
 .encuesta-empleado-pregunta{
     display: flex;
-    font-size: 2.5vh;
+    font-size: 1.5vh;
     color: #000000;
     font-weight: 800;
     border-radius: 6px;
@@ -22,10 +25,10 @@
 
 .encuesta-empleado-respuesta{
     display: flex;
-    border: 2px solid #c3c3c3;
+    background-color: #e7e7e7;
+    border: 1px solid #d9d9d9;
     border-radius: 6px;
     width: fit-content;
-    max-width: 15vw;
     min-width: 1vw;
     padding: 4px;
     justify-content: center;

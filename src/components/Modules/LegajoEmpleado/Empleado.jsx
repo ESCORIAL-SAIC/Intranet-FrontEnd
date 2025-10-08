@@ -18,6 +18,22 @@ function Empleado(){
     const [encuestas, setEncuestas] = useState([])
     const [puesto, setPuesto] = useState('');
 
+    const getEmpleado = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(process.env.REACT_APP_BASE_URL+"/empleado",{
+                headers: {
+                    Authorization: token,
+                    Empleado_id: id
+                }
+            })
+            const jsonData = await response.json();
+            setEmpleado(jsonData[0]);        
+        } catch (err) {
+            console.log(err.message)
+        }
+    }
+
     const getPuesto = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -178,7 +194,7 @@ function Empleado(){
             </div>    
                 
             {
-                /*Object.keys(empleado).length <= 0 
+                Object.keys(empleado).length <= 0 
                         ? (
                             loading
                             ? <div className="buscar-loading">Cargando...</div> 
@@ -187,7 +203,7 @@ function Empleado(){
                             </a></div>
                         )
                         : <></>
-                */
+                
             }
             
         </div>
