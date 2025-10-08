@@ -1,0 +1,33 @@
+.encuesta-empleado{
+    padding: 2vh 2vw;
+    overflow-y: auto;
+}
+
+.encuesta-empleado-row{
+    display: flex;
+    flex-direction: column;
+    width: 80vw;
+    font-family: 'Inter';
+    margin-bottom: 1.5vh;
+}
+
+.encuesta-empleado-pregunta{
+    display: flex;
+    font-size: 2.5vh;
+    color: #000000;
+    font-weight: 800;
+    border-radius: 6px;
+    margin-bottom: 1vh;
+}
+
+.encuesta-empleado-respuesta{
+    display: flex;
+    border: 2px solid #c3c3c3;
+    border-radius: 6px;
+    width: fit-content;
+    max-width: 15vw;
+    min-width: 1vw;
+    padding: 4px;
+    justify-content: center;
+    align-items: center;
+}
