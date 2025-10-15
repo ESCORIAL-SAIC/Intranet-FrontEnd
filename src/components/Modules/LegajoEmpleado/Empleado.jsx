@@ -11,6 +11,7 @@ function Empleado(){
 
     let navigate = useNavigate();
     let { id } = useParams();
+    const [propuesta, setPropuesta] = useState({});
     const [empleado, setEmpleado] = useState({});
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('desempenio');
@@ -21,7 +22,7 @@ function Empleado(){
     const getEmpleado = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(process.env.REACT_APP_BASE_URL+"/empleado",{
+            const response = await fetch(process.env.REACT_APP_BASE_URL+"/empleado-detalle",{
                 headers: {
                     Authorization: token,
                     Empleado_id: id
@@ -70,7 +71,7 @@ function Empleado(){
             }
             );
             const jsonData = await response.json();
-            setEmpleado(jsonData);
+            setPropuesta(jsonData);
         } catch (err) {
             console.log(err.message)
         } finally {
@@ -89,7 +90,6 @@ function Empleado(){
             })
             const jsonData = await response.json();
             setEncuestas(jsonData); 
-            console.log(jsonData)
         } catch (err) {
             console.log(err.message)
         }
@@ -107,7 +107,6 @@ function Empleado(){
             })
             const jsonData = await response.json();
             setEvaluaciones(jsonData); 
-            console.log(jsonData)
         } catch (err) {
             console.log(err.message)
         }
@@ -123,7 +122,8 @@ function Empleado(){
                 }
             });
             const jsonData = await response.json();
-            setEmpleado(jsonData);        
+            setPropuesta(jsonData);        
+            console.log(jsonData);
         } catch (err) {
             console.log(err.message)
         }
@@ -142,6 +142,7 @@ function Empleado(){
         getPuesto();
         getEvaluaciones();
         getEncuestas();
+        getEmpleado();
       }, []);    
 
     return(
@@ -153,9 +154,13 @@ function Empleado(){
         <div className="legajo-empleado">
             <div className="empleado-detalle">
                 <div className="empleado-detalle-left">
-                    <div className="empleado-nombre">{empleado.empleado}</div>
-                    <div className="empleado-legajo">{empleado.legajo}</div>
+                    <img className="empleado-detalle-img" src={"data:image/png;base64, "+empleado.image} alt="" />
+                    <div className="empleado-detalle-datos">
+                        <div className="empleado-nombre">{empleado.nombre}</div>
+                        <div className="empleado-legajo">{empleado.legajo}</div>
+                    </div>
                 </div>
+                
                 <div className="empleado-detalle-right">
                     <div className="empleado-detalle-titulo">Puesto: {empleado.puesto}</div>
                     <div className="empleado-detalle-titulo">Sector: {empleado.sector}</div>
@@ -188,24 +193,26 @@ function Empleado(){
                 <div className="empleado-solapa-contenido">
                     {activeTab === 'desempenio' && <EmpleadoDesempenio evaluaciones={evaluaciones} />}
                     {activeTab === 'encuestas' && <EmpleadoEncuesta encuestas={encuestas} />}
-                    {activeTab === 'plancap' && <EmpleadoPlanCapacitacion empleado={empleado} propuesta={empleado.propuesta}/>}
+                    {/* {activeTab === 'plancap' && <EmpleadoPlanCapacitacion empleado={empleado} propuesta={propuesta.propuesta}/>} */}
+                    {activeTab === 'plancap' ? 
+                        Object.keys(propuesta).length <= 0 
+                            ? (
+                                loading
+                                ? <div className="buscar-loading">Cargando...</div> 
+                                : 
+                                <div className="buscador-plan">
+                                    <h2 className="buscador-plan-titulo">Obtener Plan Capacitacion</h2>
+                                    <a className="buscador-plan-button" href='#' onClick={(e) => {e.preventDefault();cargarPlan();}}>
+                                        Obtener
+                                    </a>
+                                </div>
+                            )
+                            : <EmpleadoPlanCapacitacion empleado={empleado} propuesta={propuesta.propuesta}/>
+                        : null
+                    }
                     {activeTab === 'puesto' && <EmpleadoPuesto puesto={puesto} />}
                 </div>
             </div>    
-                
-            {
-                Object.keys(empleado).length <= 0 
-                        ? (
-                            loading
-                            ? <div className="buscar-loading">Cargando...</div> 
-                            : <div className="buscador-plan"><a className="buscar-button" href='#' onClick={(e) => {e.preventDefault();cargarPlan();}}>
-                                Buscar
-                            </a></div>
-                        )
-                        : <></>
-                
-            }
-            
         </div>
     </div>
     );
