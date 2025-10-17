@@ -202,6 +202,12 @@
     color: #ffffff;
 }
 
+.propuesta-capacitacion-subtitulo{
+    font-size: 1.8vh;
+    font-weight: 600;
+    margin-bottom: 1vh;
+}
+
 .propuesta-capacitacion-texto{
     margin-bottom: 4vh;
 }
