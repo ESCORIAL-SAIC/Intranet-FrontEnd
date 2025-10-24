@@ -32,8 +32,8 @@ function EmpleadoPlanCapacitacion(props) {
                                         </div>
                                     </div>
                                     <div className="">
-                                        <div className="propuesta-capacitacion-subtitulo">Plazo sugerido: </div>
-                                        <div className="propuesta-capacitacion-texto">{item.plazo_sugerido}</div>
+                                        <div className="propuesta-capacitacion-subtitulo">Curso sugerido: </div>
+                                        <div className="propuesta-capacitacion-texto">{}</div>
                                     </div>
                                 </div>
                             ))
