@@ -45,10 +45,20 @@ function Empleado(){
                 }
             })
             const jsonData = await response.json();
-            const raw = String.fromCharCode.apply(null, new Uint8Array(jsonData[0].puesto.data));
-            setPuesto(btoa(raw));
+            
+            // Check if we have the data in the expected format
+            if (jsonData[0]?.puesto?.data) {
+                // Convert the array buffer to base64 directly
+                const uint8Array = new Uint8Array(jsonData[0].puesto.data);
+                const binaryString = uint8Array.reduce((data, byte) => data + String.fromCharCode(byte), '');
+                const base64String = btoa(binaryString);
+                setPuesto(base64String);
+            } else {
+                console.error('Unexpected data format:', jsonData);
+            }
         } catch (err) {
-            console.log(err.message)
+            console.error('Error fetching puesto:', err.message);
+            setPuesto(null);
         }  
     }
 
