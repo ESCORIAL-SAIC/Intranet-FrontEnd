@@ -81,6 +81,7 @@ function Empleado(){
             }
             );
             const jsonData = await response.json();
+            console.log(jsonData);
             setPropuesta(jsonData);
         } catch (err) {
             console.log(err.message)
@@ -133,7 +134,6 @@ function Empleado(){
             });
             const jsonData = await response.json();
             setPropuesta(jsonData);        
-            console.log(jsonData);
         } catch (err) {
             console.log(err.message)
         }
