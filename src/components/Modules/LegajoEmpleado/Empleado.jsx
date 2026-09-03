@@ -6,6 +6,7 @@ import EmpleadoPuesto from './EmpleadoPuesto';
 import EmpleadoDesempenio from './EmpleadoDesempenio';
 import EmpleadoEncuesta from './EmpleadoEncuestas';
 import EmpleadoPlanCapacitacion from "./EmpleadoPlanCapacitacion";
+import EmpleadoCVInterno from "./EmpleadoCVInterno";
 
 function Empleado(){
 
@@ -18,6 +19,8 @@ function Empleado(){
     const [evaluaciones, setEvaluaciones] = useState([])
     const [encuestas, setEncuestas] = useState([])
     const [puesto, setPuesto] = useState('');
+    const [genoma, setGenoma] = useState([])
+    const [cvDatos, setCvDatos] = useState(null)
 
     const getEmpleado = async () => {
         try {
@@ -82,7 +85,7 @@ function Empleado(){
             );
             const jsonData = await response.json();
             console.log(jsonData);
-            setPropuesta(jsonData);
+            setPropuesta(jsonData.propuesta ?? jsonData);
         } catch (err) {
             console.log(err.message)
         } finally {
@@ -123,6 +126,38 @@ function Empleado(){
         }
     }
 
+    const getGenoma = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(process.env.REACT_APP_BASE_URL+'/empleado-genoma',{
+                headers: {
+                    Authorization: token,
+                    Empleado_id: id
+                }
+            })
+            const jsonData = await response.json();
+            setGenoma(jsonData);
+        } catch (err) {
+            console.log(err.message)
+        }
+    }
+
+    const getCvDatos = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(process.env.REACT_APP_BASE_URL+'/empleado-cv-datos',{
+                headers: {
+                    Authorization: token,
+                    Empleado_id: id
+                }
+            })
+            const jsonData = await response.json();
+            setCvDatos(jsonData);
+        } catch (err) {
+            console.log(err.message)
+        }
+    }
+
     const obtenerPlan = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -133,7 +168,7 @@ function Empleado(){
                 }
             });
             const jsonData = await response.json();
-            setPropuesta(jsonData);        
+            setPropuesta(jsonData.propuesta ?? jsonData);        
         } catch (err) {
             console.log(err.message)
         }
@@ -141,11 +176,14 @@ function Empleado(){
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        axios.get(process.env.REACT_APP_BASE_URL+"/main", {
-            headers: {
-                Authorization: token,
-            }
-        }).then(res => {}).catch(err => {
+        axios.get(process.env.REACT_APP_BASE_URL+"/perteneceagrupo", {
+        headers: {
+            Authorization: token,
+            GrupoUsuario: "'rol_intranet_adm'"
+        }
+        }).then(res => {
+            
+        }).catch(err => {
             navigate('/login')
         })
         obtenerPlan();
@@ -153,7 +191,9 @@ function Empleado(){
         getEvaluaciones();
         getEncuestas();
         getEmpleado();
-      }, []);    
+        getGenoma();
+        getCvDatos();
+      }, []);
 
     return(
     <div className="container">
@@ -194,10 +234,15 @@ function Empleado(){
                         onClick={(e) => {e.preventDefault(); setActiveTab('plancap');}}>
                         Capacitacion
                     </a>
-                    <a href="#" 
+                    <a href="#"
                         className={`empleado-selector-boton ${activeTab === 'puesto' ? 'active' : ''}`}
                         onClick={(e) => {e.preventDefault(); setActiveTab('puesto');}}>
                         Puesto
+                    </a>
+                    <a href="#"
+                        className={`empleado-selector-boton ${activeTab === 'cvinterno' ? 'active' : ''}`}
+                        onClick={(e) => {e.preventDefault(); setActiveTab('cvinterno');}}>
+                        CV Interno
                     </a>
                 </div>
                 <div className="empleado-solapa-contenido">
@@ -217,10 +262,11 @@ function Empleado(){
                                     </a>
                                 </div>
                             )
-                            : <EmpleadoPlanCapacitacion empleado={empleado} propuesta={propuesta.propuesta}/>
+                            : <EmpleadoPlanCapacitacion empleado={empleado} propuesta={propuesta}/>
                         : null
                     }
                     {activeTab === 'puesto' && <EmpleadoPuesto puesto={puesto} />}
+                    {activeTab === 'cvinterno' && <EmpleadoCVInterno empleado={empleado} genoma={genoma} cvDatos={cvDatos} />}
                 </div>
             </div>    
         </div>
