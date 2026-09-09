@@ -3,14 +3,17 @@ import PilaresForm from './PilaresForm';
 import ResultadoInput from './ResultadoInput';
 import EstadoBadge from './EstadoBadge';
 import { ESCALA, scoreClass } from '../constants';
-import { fmt, pesosPilaresValidos } from '../utils';
+import { fmt, pilaresListosParaGuardar } from '../utils';
 
 function formatUmbral(pilar) {
     const u = pilar.unidad ? ` ${pilar.unidad}` : '';
-    const primerCorte = `${pilar.umbral_score2}${u}`;
-    return pilar.direccion === 'lower'
-        ? [`> ${primerCorte}`, primerCorte, `${pilar.umbral_score3}${u}`, `${pilar.umbral_score4}${u}`, `${pilar.umbral_score5}${u}`]
-        : [`< ${primerCorte}`, primerCorte, `${pilar.umbral_score3}${u}`, `${pilar.umbral_score4}${u}`, `${pilar.umbral_score5}${u}`];
+    return [
+        `${pilar.umbral_score1}${u}`,
+        `${pilar.umbral_score2}${u}`,
+        `${pilar.umbral_score3}${u}`,
+        `${pilar.umbral_score4}${u}`,
+        `${pilar.umbral_score5}${u}`,
+    ];
 }
 
 // Vista de detalle de un registro de Objetivos Anuales — layout basado en el maquetado de referencia
@@ -80,7 +83,7 @@ function DetalleObjetivo({ registro, pilares, soloLectura, puedeEditarPilares, o
                 <>
                     <PilaresForm pilares={pilaresForm} onChange={setPilaresForm} />
                     <div className="oa-form-botones">
-                        <button type="button" className="oa-boton-guardar" disabled={guardando || !pesosPilaresValidos(pilaresForm)} onClick={guardarEdicion}>
+                        <button type="button" className="oa-boton-guardar" disabled={guardando || !pilaresListosParaGuardar(pilaresForm)} onClick={guardarEdicion}>
                             {guardando ? 'Guardando...' : 'Guardar pilares'}
                         </button>
                         <button type="button" className="oa-boton-limpiar" onClick={() => setEditandoPilares(false)} disabled={guardando}>

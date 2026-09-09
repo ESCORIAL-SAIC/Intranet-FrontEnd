@@ -1,6 +1,6 @@
 import PilarEditor from './PilarEditor';
-import { sumaPesos, pesosPilaresValidos } from '../utils';
-import { PILAR_VACIO } from '../constants';
+import { sumaPesos, pesosPilaresValidos, cantidadPilaresValida } from '../utils';
+import { PILAR_VACIO, PILARES_MIN, PILARES_MAX } from '../constants';
 
 // Editor de la lista completa de pilares de un registro (alta o edición mientras está en borrador).
 function PilaresForm({ pilares, onChange }) {
@@ -21,9 +21,16 @@ function PilaresForm({ pilares, onChange }) {
 
     const suma = sumaPesos(pilares);
     const valido = pesosPilaresValidos(pilares);
+    const cantidadValida = cantidadPilaresValida(pilares);
 
     return (
         <div className="oa-pilares-form">
+            {!cantidadValida && (
+                <div className="oa-alert-box">
+                    Un registro debe tener entre {PILARES_MIN} y {PILARES_MAX} pilares (actual: {pilares.length}).
+                </div>
+            )}
+
             {pilares.map((pilar, index) => (
                 <PilarEditor
                     key={index}
@@ -34,7 +41,7 @@ function PilaresForm({ pilares, onChange }) {
                 />
             ))}
 
-            <button type="button" className="oa-boton-secundario" onClick={agregarPilar}>
+            <button type="button" className="oa-boton-secundario" onClick={agregarPilar} disabled={pilares.length >= PILARES_MAX}>
                 <i className="material-symbols-outlined">add</i> Agregar pilar
             </button>
 

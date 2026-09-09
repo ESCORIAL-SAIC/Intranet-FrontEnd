@@ -19,12 +19,28 @@ export const DIRECCIONES = [
     { value: 'lower', label: 'Menor resultado = mejor' },
 ];
 
+// Cada pilar debe pesar entre 10% y 40%, y un registro debe tener entre 3 y 5 pilares.
+export const PESO_MIN = 10;
+export const PESO_MAX = 40;
+export const PILARES_MIN = 3;
+export const PILARES_MAX = 5;
+
+// Etiquetas de los 5 umbrales editables (el umbral a partir del cual se alcanza ese puntaje).
+export const UMBRAL_FIELD_LABELS = {
+    umbral_score1: 'No alcanza',
+    umbral_score2: 'Casi alcanza',
+    umbral_score3: 'Alcanza',
+    umbral_score4: 'Supera',
+    umbral_score5: 'Excede',
+};
+
 export const PILAR_VACIO = {
     nombre: '',
     descripcion: '',
     peso: '',
     unidad: '',
     direccion: 'higher',
+    umbral_score1: '',
     umbral_score2: '',
     umbral_score3: '',
     umbral_score4: '',

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PilaresForm from './PilaresForm';
 import { PILAR_VACIO } from '../constants';
-import { pesosPilaresValidos } from '../utils';
+import { pilaresListosParaGuardar } from '../utils';
 
 // Alta de un nuevo registro (ciclo anual) para un empleado: selecciona empleado + año y define
 // los pilares iniciales. Sólo accesible para Dirección/administradores/RRHH.
@@ -14,7 +14,7 @@ function NuevoRegistroForm({ empleados, busqueda, onBuscar, onCrear, onCancelar,
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!empleadoId || !anio) return;
-        if (!pesosPilaresValidos(pilares)) return;
+        if (!pilaresListosParaGuardar(pilares)) return;
         onCrear({ empleado_id: Number(empleadoId), anio: Number(anio), evaluador, pilares });
     };
 
@@ -52,7 +52,7 @@ function NuevoRegistroForm({ empleados, busqueda, onBuscar, onCrear, onCancelar,
             {mensaje && <div className={`oa-mensaje ${mensaje.tipo}`}>{mensaje.texto}</div>}
 
             <div className="oa-form-botones">
-                <button type="submit" className="oa-boton-guardar" disabled={guardando || !empleadoId || !pesosPilaresValidos(pilares)}>
+                <button type="submit" className="oa-boton-guardar" disabled={guardando || !empleadoId || !pilaresListosParaGuardar(pilares)}>
                     {guardando ? 'Creando...' : 'Crear registro'}
                 </button>
                 <button type="button" className="oa-boton-limpiar" onClick={onCancelar} disabled={guardando}>

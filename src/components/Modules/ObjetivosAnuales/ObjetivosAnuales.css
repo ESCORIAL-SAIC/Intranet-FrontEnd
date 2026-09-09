@@ -109,6 +109,7 @@ table.oa-pillar-table { width: 100%; border-collapse: collapse; }
 .oa-boton-guardar:disabled { background: #B4B2A9; cursor: not-allowed; }
 .oa-boton-limpiar { background: #fff; border-color: #D3D1C7; color: #5F5E5A; }
 .oa-boton-secundario { background: #EBF3FC; border-color: #B5D4F4; color: #0C447C; width: fit-content;}
+.oa-boton-secundario:disabled { opacity: 0.5; cursor: not-allowed; }
 .oa-boton-icono { background: transparent; border: none; color: #C04828; padding: 6px; }
 .oa-form-botones { display: flex; gap: 10px; margin: 16px 0 24px; }
 
@@ -121,6 +122,9 @@ table.oa-pillar-table { width: 100%; border-collapse: collapse; }
 .oa-field-unidad { flex: 1; min-width: 90px; }
 .oa-field-direccion { flex: 2; min-width: 180px; }
 .oa-field-desc { width: 100%; }
+.oa-field-input-error { border-color: #D85A30 !important; background: #FEF2F0 !important; }
+.oa-field-error { font-size: 10px; color: #C04828; }
+.oa-subtitulo-criterios { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #5F5E5A; margin-top: 6px; }
 .oa-umbrales-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; }
 
 .oa-suma-pesos { display: flex; align-items: center; gap: 12px; border-radius: 8px; padding: 10px 16px; font-size: 12px; width: fit-content;}
