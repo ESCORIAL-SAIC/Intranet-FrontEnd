@@ -1,0 +1,46 @@
+.listado-objetivos-ger {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 15px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.geren-header {
+  font-family: 'Inter';
+  font-size: 18px;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.geren-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 5vh 1vw;
+  height: max-content;
+}
+
+.texto-no-geren {
+  grid-column: 1 / -1;
+  font-family: 'Inter';
+  font-size: 14px;
+  color: #999999;
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .geren-content {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .geren-content {
+    grid-template-columns: 1fr;
+  }
+}

@@ -14,6 +14,7 @@ import IndicadorPrincipal from './IndicadorPrincipal';
 import Visualizador from './Visualizador';
 import RegistroEstudios from '../../Varios/RegistroEstudios/RegistroEstudios';
 import BotonAccesoRegistroEstudios from '../../Varios/RegistroEstudios/BotonAccesosRegistroEstudios';
+import ListadoObjetivosGer from './ListadoObjetivosGer';
 
 function Main(){
 
@@ -75,6 +76,7 @@ function Main(){
                     
                     <MainCapacitaciones/>
                     <ListadoComunicaciones/>
+                    <ListadoObjetivosGer/>
                 </div>
                 <div className='right-container'>
                     {
