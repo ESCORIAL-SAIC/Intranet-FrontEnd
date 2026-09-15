@@ -16,11 +16,14 @@ function LegajoEmpleado(){
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        axios.get(process.env.REACT_APP_BASE_URL+"/main", {
-            headers: {
-                Authorization: token,
-            }
-        }).then(res => {}).catch(err => {
+        axios.get(process.env.REACT_APP_BASE_URL+"/perteneceagrupo", {
+        headers: {
+            Authorization: token,
+            GrupoUsuario: "'rol_intranet_adm'"
+        }
+        }).then(res => {
+            
+        }).catch(err => {
             navigate('/login')
         })
 
@@ -63,7 +66,7 @@ function LegajoEmpleado(){
                     {
             empleados.map(empleado => (
                 <a href={"/empleado/"+empleado.empleado_id} className="item-empleado">
-                    <img className="item-empleado-img" src={"data:image/png;base64, "+empleado.image}></img>
+                    {/* <img className="item-empleado-img" src={"data:image/png;base64, "+empleado.image}></img> */}
                     <div className="item-empleado-detalle">
                         <div className="item-empleado-nombre">{empleado.empleado}</div>
                         <div className="item-empleado-puesto">Puesto: {empleado.puesto}</div>

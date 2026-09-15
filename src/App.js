@@ -8,7 +8,9 @@ import Main from './components/Modules/Main/Main';
 import Login from './components/Login/Login';
 import CircuitoCompras from './components/Modules/CircuitoCompras/CircuitoCompras';
 import OrganigramaAdm from './components/Modules/OrganigramaAdm/OrganigramaAdm';
+import OrganigramaAdmRF from './components/Modules/OrganigramaAdmRF/OrganigramaAdmRF';
 import CargaComunicaciones from './components/Modules/CargaComunicaciones/CargaComunicaciones';
+import CargaObjetivosGer from './components/Modules/CargaObjetivosGer/CargaObjetivosGer';
 import Perfil from './components/Modules/Perfil/Perfil';
 import Evaluacion from './components/Modules/CargaEvaluacionDesempenio/Evaluacion';
 import EvaluacionesDesempenio from './components/Modules/EvaluacionesDesempenio/EvaluacionesDesempenio';
@@ -25,6 +27,9 @@ import ListadoEvaluacionesMBTI from './components/Modules/EvaluacionMBTI/Listado
 import LegajoEmpleado from './components/Modules/LegajoEmpleado/LegajoEmpleado';
 import Empleado from './components/Modules/LegajoEmpleado/Empleado';
 import Encuesta from './components/Modules/LegajoEmpleado/Encuesta/Encuesta';
+import NueveBox from './components/Modules/NueveBox/NueveBox';
+import ObjetivosAnuales from './components/Modules/ObjetivosAnuales/ObjetivosAnuales';
+import AsistentesRRHH from './components/Modules/AsistentesRRHH/AsistentesRRHH';
 
 
 function App() {
@@ -43,8 +48,10 @@ function App() {
           <Route path="/archive-explorer" element={<div className='m-container'><MenuBar/><ArchiveExplorer/></div>}></Route>
           <Route path="/organigrama" element={<div className='m-container'><MenuBar/><Organigrama/></div>}></Route>
           <Route path="/organigrama-adm" element={<div className='m-container'><MenuBar/><OrganigramaAdm/></div>}></Route>
+          <Route path="/organigrama-adm-rf" element={<div className='m-container'><MenuBar/><OrganigramaAdmRF/></div>}></Route>
           <Route path="/circuito-compras" element={<div className='m-container'><MenuBar/><CircuitoCompras/></div>}></Route>
           <Route path="/carga-comunicaciones" element={<div className='m-container'><MenuBar/><CargaComunicaciones/></div>}></Route>
+          <Route path="/carga-objetivos-ger" element={<div className='m-container'><MenuBar/><CargaObjetivosGer/></div>}></Route>
           <Route path="/evaluacion-desempenio/:id/:usuario" element={<div className='m-container'><MenuBar/><Evaluacion/></div>}></Route>
           <Route path="/evaluaciones-desempenio" element={<div className='m-container'><MenuBar/><EvaluacionesDesempenio/></div>}></Route>
           <Route path="/respuestas-evaluacion-desempenio/:id" element={<div className='m-container'><MenuBar/><RespuestasEvaluacion/></div>}></Route>
@@ -60,6 +67,9 @@ function App() {
           <Route path="/legajo-empleado" element={<div className='m-container'><MenuBar/><LegajoEmpleado/></div>}></Route>
           <Route path="/empleado/:id" element={<div className='m-container'><MenuBar/><Empleado/></div>}></Route>
           <Route path="/encuesta-empleado/:id" element={<div className='m-container'><MenuBar/><Encuesta/></div>}></Route>
+          <Route path="/nueve-box" element={<div className='m-container'><MenuBar/><NueveBox/></div>}></Route>
+          <Route path="/objetivos-anuales" element={<div className='m-container'><MenuBar/><ObjetivosAnuales/></div>}></Route>
+          <Route path="/asistentes-rrhh" element={<div className='m-container'><MenuBar/><AsistentesRRHH/></div>}></Route>
         </Routes>
       </div>    
       

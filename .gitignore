@@ -27,3 +27,6 @@ yarn-error.log*
 /server
 
 *.csv
+
+# Material de referencia para prompting (mockups, manuales, informes), no es codigo de la app
+src/components/Modules/info-prompts/

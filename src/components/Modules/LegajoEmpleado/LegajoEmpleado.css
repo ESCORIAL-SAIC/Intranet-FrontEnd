@@ -11,6 +11,8 @@
     flex-direction: row;
     flex-wrap: wrap;
     align-content: flex-start;
+    overflow-y: auto;
+    height: 80vh;
 }
 
 .buscador-plan{
@@ -71,6 +73,8 @@
     text-decoration: none;
     background-color: var(--main-esco-color);
     color: #000000;
+
+    justify-content: space-between;
 }
 
 .item-empleado-img{
