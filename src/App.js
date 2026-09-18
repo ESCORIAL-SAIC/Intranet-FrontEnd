@@ -30,6 +30,7 @@ import Encuesta from './components/Modules/LegajoEmpleado/Encuesta/Encuesta';
 import NueveBox from './components/Modules/NueveBox/NueveBox';
 import ObjetivosAnuales from './components/Modules/ObjetivosAnuales/ObjetivosAnuales';
 import AsistentesRRHH from './components/Modules/AsistentesRRHH/AsistentesRRHH';
+import RRHHFormularios from './components/Modules/RRHHFormularios/RRHHFormularios';
 
 
 function App() {
@@ -70,6 +71,7 @@ function App() {
           <Route path="/nueve-box" element={<div className='m-container'><MenuBar/><NueveBox/></div>}></Route>
           <Route path="/objetivos-anuales" element={<div className='m-container'><MenuBar/><ObjetivosAnuales/></div>}></Route>
           <Route path="/asistentes-rrhh" element={<div className='m-container'><MenuBar/><AsistentesRRHH/></div>}></Route>
+          <Route path="/rrhh-formularios" element={<div className='m-container'><MenuBar/><RRHHFormularios/></div>}></Route>
         </Routes>
       </div>    
       
