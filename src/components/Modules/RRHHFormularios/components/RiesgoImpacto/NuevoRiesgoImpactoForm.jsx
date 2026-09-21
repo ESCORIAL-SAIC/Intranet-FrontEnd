@@ -12,7 +12,7 @@ function NuevoRiesgoImpactoForm({ empleados, busqueda, onBuscar, onCrear, onCanc
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!empleadoId || !anio) return;
-        onCrear({ empleado_id: Number(empleadoId), anio: Number(anio), evaluador, antiguedad, fecha: fecha || null });
+        onCrear({ empleado_id: empleadoId, anio: Number(anio), evaluador, antiguedad, fecha: fecha || null });
     };
 
     return (
