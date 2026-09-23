@@ -5,15 +5,14 @@ import axios from 'axios';
 import PendientesFormulario from '../PendientesFormulario';
 import GestionCiclos from '../GestionCiclos';
 import RegistroListRiesgoImpacto from './RegistroListRiesgoImpacto';
-import NuevoRiesgoImpactoForm from './NuevoRiesgoImpactoForm';
 import DetalleRiesgoImpacto from './DetalleRiesgoImpacto';
 
 const GRUPO_ADMIN = "'Direccion','administradores','rrhh'";
 const TIPO = 'riesgo-impacto';
 
 // RRHH/Dirección/administradores abren un ciclo (ventana de fechas) y, además, conservan el
-// listado completo + alta manual para casos excepcionales. Mientras el ciclo está vigente,
-// cualquier líder ve y completa el formulario de sus reportes directos (1 solo nivel).
+// listado completo para supervisión. Mientras el ciclo está vigente, cualquier líder ve y
+// completa el formulario de sus reportes directos (1 solo nivel).
 function RiesgoImpactoTab() {
     const navigate = useNavigate();
     const baseURL = process.env.REACT_APP_BASE_URL;
@@ -22,7 +21,7 @@ function RiesgoImpactoTab() {
 
     const [cargandoInicial, setCargandoInicial] = useState(true);
     const [esAdmin, setEsAdmin] = useState(false);
-    const [vista, setVista] = useState('pendientes'); // 'pendientes' | 'listado' | 'ciclos' | 'nuevo' | 'detalle'
+    const [vista, setVista] = useState('pendientes'); // 'pendientes' | 'listado' | 'ciclos' | 'detalle'
     const [origenDetalle, setOrigenDetalle] = useState('pendientes');
 
     const [pendientes, setPendientes] = useState({ ciclo: null, items: [] });
@@ -32,8 +31,6 @@ function RiesgoImpactoTab() {
 
     const [guardando, setGuardando] = useState(false);
     const [mensaje, setMensaje] = useState(null);
-    const [empleadosBusqueda, setEmpleadosBusqueda] = useState('');
-    const [empleadosResultados, setEmpleadosResultados] = useState([]);
 
     const avisar = (tipo, texto) => {
         setMensaje({ tipo, texto });
@@ -113,33 +110,6 @@ function RiesgoImpactoTab() {
             await seleccionarRegistro(response.data.registro.id, 'pendientes');
         } catch (err) {
             avisar('error', err.response?.data?.error || 'Error iniciando el formulario');
-        } finally {
-            setGuardando(false);
-        }
-    };
-
-    const buscarEmpleados = async (query) => {
-        setEmpleadosBusqueda(query);
-        if (!query || query.trim().length < 2) {
-            setEmpleadosResultados([]);
-            return;
-        }
-        try {
-            const response = await axios.get(`${baseURL}/legajos-empleados`, { headers: { Authorization: token, busqueda: query } });
-            setEmpleadosResultados(response.data || []);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-    const crearRegistro = async (payload) => {
-        setGuardando(true);
-        try {
-            const response = await axios.post(`${baseURL}/rrhh-formularios/${TIPO}`, payload, axiosConfig);
-            avisar('exito', 'Registro creado correctamente');
-            await seleccionarRegistro(response.data.registro.id, 'listado');
-        } catch (err) {
-            avisar('error', err.response?.data?.error || 'Error creando el registro');
         } finally {
             setGuardando(false);
         }
@@ -230,7 +200,7 @@ function RiesgoImpactoTab() {
             {esAdmin && vista !== 'detalle' && (
                 <div className="rf-subselector">
                     <a href="#" className={`rf-subselector-boton ${vista === 'pendientes' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); irAVista('pendientes'); }}>Pendientes</a>
-                    <a href="#" className={`rf-subselector-boton ${vista === 'listado' || vista === 'nuevo' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); irAVista('listado'); }}>Listado</a>
+                    <a href="#" className={`rf-subselector-boton ${vista === 'listado' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); irAVista('listado'); }}>Listado</a>
                     <a href="#" className={`rf-subselector-boton ${vista === 'ciclos' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); irAVista('ciclos'); }}>Ciclos</a>
                 </div>
             )}
@@ -248,29 +218,7 @@ function RiesgoImpactoTab() {
             )}
 
             {vista === 'listado' && (
-                <>
-                    <div className="rf-toolbar">
-                        <button type="button" className="rf-boton-guardar" onClick={() => irAVista('nuevo')}>
-                            <i className="material-symbols-outlined">add</i> Alta manual
-                        </button>
-                    </div>
-                    <RegistroListRiesgoImpacto registros={registros} onSeleccionar={(id) => seleccionarRegistro(id, 'listado')} />
-                </>
-            )}
-
-            {vista === 'nuevo' && (
-                <NuevoRiesgoImpactoForm
-                    empleados={empleadosResultados}
-                    busqueda={empleadosBusqueda}
-                    onBuscar={buscarEmpleados}
-                    onCrear={crearRegistro}
-                    onCancelar={() => irAVista('listado')}
-                    guardando={guardando}
-                    mensaje={mensaje}
-                    baseURL={baseURL}
-                    axiosConfig={axiosConfig}
-                    tipo={TIPO}
-                />
+                <RegistroListRiesgoImpacto registros={registros} onSeleccionar={(id) => seleccionarRegistro(id, 'listado')} />
             )}
 
             {vista === 'ciclos' && (
