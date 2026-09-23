@@ -1,18 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-// Alta de un nuevo registro (ciclo anual) para un empleado. Las 3 dimensiones se completan
+// Alta manual para casos excepcionales (RRHH/Dirección/administradores) — el flujo normal
+// para un líder es completar el formulario desde "Pendientes". Las 3 dimensiones se completan
 // en la vista de detalle inmediatamente después de crear el registro (en borrador).
-function NuevoGuiaPotencialForm({ empleados, busqueda, onBuscar, onCrear, onCancelar, guardando, mensaje }) {
+function NuevoGuiaPotencialForm({ empleados, busqueda, onBuscar, onCrear, onCancelar, guardando, mensaje, baseURL, axiosConfig, tipo }) {
     const [empleadoId, setEmpleadoId] = useState('');
-    const [anio, setAnio] = useState(new Date().getFullYear());
+    const [cicloId, setCicloId] = useState('');
+    const [ciclos, setCiclos] = useState([]);
     const [evaluador, setEvaluador] = useState('');
     const [antiguedadRol, setAntiguedadRol] = useState('');
     const [fecha, setFecha] = useState('');
 
+    useEffect(() => {
+        (async () => {
+            try {
+                const response = await axios.get(`${baseURL}/rrhh-formularios/ciclos/${tipo}`, axiosConfig);
+                setCiclos(response.data.ciclos || []);
+            } catch (err) {
+                console.log(err);
+            }
+        })();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (!empleadoId || !anio) return;
-        onCrear({ empleado_id: empleadoId, anio: Number(anio), evaluador, antiguedad_rol: antiguedadRol, fecha: fecha || null });
+        if (!empleadoId || !cicloId) return;
+        onCrear({ empleado_id: empleadoId, ciclo_id: cicloId, evaluador, antiguedad_rol: antiguedadRol, fecha: fecha || null });
     };
 
     return (
@@ -33,8 +48,13 @@ function NuevoGuiaPotencialForm({ empleados, busqueda, onBuscar, onCrear, onCanc
                         </select>
                     </div>
                     <div className="rf-field">
-                        <label className="rf-field-label">Año</label>
-                        <input className="rf-field-input" type="number" value={anio} onChange={(e) => setAnio(e.target.value)} required />
+                        <label className="rf-field-label">Ciclo</label>
+                        <select className="rf-field-input" value={cicloId} onChange={(e) => setCicloId(e.target.value)} required>
+                            <option value="">Seleccioná un ciclo</option>
+                            {ciclos.map(c => (
+                                <option key={c.id} value={c.id}>{c.nombre ? `${c.nombre} — ` : ''}{String(c.fecha_desde).substring(0, 10)} al {String(c.fecha_hasta).substring(0, 10)}</option>
+                            ))}
+                        </select>
                     </div>
                     <div className="rf-field">
                         <label className="rf-field-label">Evaluador (líder)</label>
@@ -54,7 +74,7 @@ function NuevoGuiaPotencialForm({ empleados, busqueda, onBuscar, onCrear, onCanc
             {mensaje && <div className={`rf-mensaje ${mensaje.tipo}`}>{mensaje.texto}</div>}
 
             <div className="rf-form-botones">
-                <button type="submit" className="rf-boton-guardar" disabled={guardando || !empleadoId}>
+                <button type="submit" className="rf-boton-guardar" disabled={guardando || !empleadoId || !cicloId}>
                     {guardando ? 'Creando...' : 'Crear registro'}
                 </button>
                 <button type="button" className="rf-boton-limpiar" onClick={onCancelar} disabled={guardando}>

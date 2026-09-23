@@ -229,6 +229,7 @@ export const PROYECCION_OPCIONES = [
 ];
 
 export const ESTADOS = {
-    borrador: { label: 'Borrador', className: 'estado-borrador' },
+    pendiente: { label: 'Pendiente', className: 'estado-pendiente' },
+    borrador: { label: 'En borrador', className: 'estado-borrador' },
     finalizado: { label: 'Finalizado', className: 'estado-finalizado' },
 };

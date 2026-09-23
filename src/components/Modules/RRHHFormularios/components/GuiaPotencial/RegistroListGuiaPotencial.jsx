@@ -19,7 +19,8 @@ function RegistroListGuiaPotencial({ registros, onSeleccionar }) {
                     <tr>
                         <th>Empleado</th>
                         <th>Área</th>
-                        <th>Año</th>
+                        <th>Ciclo</th>
+                        <th>Cargado por</th>
                         <th>Potencial global</th>
                         <th>Estado</th>
                     </tr>
@@ -29,7 +30,8 @@ function RegistroListGuiaPotencial({ registros, onSeleccionar }) {
                         <tr key={r.id} className="rf-registro-list-fila" onClick={() => onSeleccionar(r.id)}>
                             <td>{fmt(r.empleado_nombre)}</td>
                             <td>{fmt(r.area || r.gerencia)}</td>
-                            <td>{r.anio}</td>
+                            <td>{fmt(r.ciclo_nombre, r.anio)}</td>
+                            <td>{fmt(r.creado_por)}</td>
                             <td>{r.potencial_global ? labelPotencial(r.potencial_global) : '—'}</td>
                             <td><EstadoBadge estado={r.estado} /></td>
                         </tr>

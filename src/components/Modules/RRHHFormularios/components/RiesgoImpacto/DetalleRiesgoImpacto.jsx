@@ -9,7 +9,7 @@ import { fmt, riesgoImpactoCompleto } from '../../utils';
 // "Análisis de la IA": acá no hay diagnóstico automático, el registro sólo persiste las
 // respuestas cargadas por el evaluador.
 function DetalleRiesgoImpacto({ registro, onGuardar, onEliminar, guardando, mensaje }) {
-    const soloLectura = registro.estado === 'finalizado';
+    const soloLectura = !registro.puede_editar || registro.estado === 'finalizado';
 
     const [evaluador, setEvaluador] = useState(registro.evaluador || '');
     const [antiguedad, setAntiguedad] = useState(registro.antiguedad || '');
@@ -54,7 +54,7 @@ function DetalleRiesgoImpacto({ registro, onGuardar, onEliminar, guardando, mens
                 </div>
                 <div className="rf-doc-badge">
                     <div className="rf-doc-badge-label">Ciclo</div>
-                    <div className="rf-doc-badge-val">{registro.anio}</div>
+                    <div className="rf-doc-badge-val">{registro.ciclo_nombre || registro.anio}</div>
                     <EstadoBadge estado={registro.estado} />
                 </div>
             </div>

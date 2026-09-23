@@ -13,8 +13,9 @@ function RegistroListRiesgoImpacto({ registros, onSeleccionar }) {
                     <tr>
                         <th>Empleado</th>
                         <th>Área</th>
-                        <th>Año</th>
+                        <th>Ciclo</th>
                         <th>Evaluador</th>
+                        <th>Cargado por</th>
                         <th>Estado</th>
                     </tr>
                 </thead>
@@ -23,8 +24,9 @@ function RegistroListRiesgoImpacto({ registros, onSeleccionar }) {
                         <tr key={r.id} className="rf-registro-list-fila" onClick={() => onSeleccionar(r.id)}>
                             <td>{fmt(r.empleado_nombre)}</td>
                             <td>{fmt(r.area || r.gerencia)}</td>
-                            <td>{r.anio}</td>
+                            <td>{fmt(r.ciclo_nombre, r.anio)}</td>
                             <td>{fmt(r.evaluador)}</td>
+                            <td>{fmt(r.creado_por)}</td>
                             <td><EstadoBadge estado={r.estado} /></td>
                         </tr>
                     ))}

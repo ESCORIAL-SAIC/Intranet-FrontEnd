@@ -44,6 +44,23 @@
 
 .rf-solapa-contenido { font-family: 'Inter', sans-serif; color: #1A1916; }
 
+/* SUB-SELECTOR (Pendientes / Listado / Ciclos, solo admin) */
+.rf-subselector { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid #D3D1C7; }
+.rf-subselector-boton { padding: 8px 4px; text-decoration: none; color: #888780; font-size: 13px; font-weight: 600; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+.rf-subselector-boton:hover { color: #1A1916; }
+.rf-subselector-boton.active { color: #0A3D63; border-bottom-color: #0A3D63; }
+
+/* CICLO BANNER (vista Pendientes) */
+.rf-ciclo-banner { background: #EBF3FC; border: 1px solid #B5D4F4; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; }
+.rf-ciclo-banner-label { font-size: 12.5px; font-weight: 600; color: #0C447C; }
+.rf-ciclo-banner-fechas { font-size: 12px; color: #185FA5; margin-top: 2px; }
+
+.rf-registro-list-fila-estatica td { padding: 12px; font-size: 13px; border-bottom: 1px solid #F1EFE8; }
+
+.rf-estado-badge.estado-pendiente { background: #F5F4F1; color: #5F5E5A; }
+
+.rf-ciclo-form { background: #fff; border: 1px solid #D3D1C7; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+
 .rf-vacio { background: #fff; border: 1px solid #D3D1C7; border-radius: 12px; padding: 30px; text-align: center; color: #888780; }
 
 .rf-toolbar { display: flex; justify-content: flex-end; margin-bottom: 16px; }

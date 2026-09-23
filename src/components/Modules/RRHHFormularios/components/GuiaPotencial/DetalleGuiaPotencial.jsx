@@ -7,7 +7,7 @@ import { fmt, guiaPotencialCompleta } from '../../utils';
 // Vista de detalle — layout basado en el maquetado de referencia
 // (info-prompts/RRHHFormularios/Guia de Potencial.html).
 function DetalleGuiaPotencial({ registro, onGuardar, onEliminar, guardando, mensaje }) {
-    const soloLectura = registro.estado === 'finalizado';
+    const soloLectura = !registro.puede_editar || registro.estado === 'finalizado';
 
     const [evaluador, setEvaluador] = useState(registro.evaluador || '');
     const [antiguedadRol, setAntiguedadRol] = useState(registro.antiguedad_rol || '');
@@ -56,7 +56,7 @@ function DetalleGuiaPotencial({ registro, onGuardar, onEliminar, guardando, mens
                 </div>
                 <div className="rf-doc-badge">
                     <div className="rf-doc-badge-label">Ciclo</div>
-                    <div className="rf-doc-badge-val">{registro.anio}</div>
+                    <div className="rf-doc-badge-val">{registro.ciclo_nombre || registro.anio}</div>
                     <EstadoBadge estado={registro.estado} />
                 </div>
             </div>

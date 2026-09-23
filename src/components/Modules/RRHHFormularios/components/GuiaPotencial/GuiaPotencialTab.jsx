@@ -2,14 +2,18 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+import PendientesFormulario from '../PendientesFormulario';
+import GestionCiclos from '../GestionCiclos';
 import RegistroListGuiaPotencial from './RegistroListGuiaPotencial';
 import NuevoGuiaPotencialForm from './NuevoGuiaPotencialForm';
 import DetalleGuiaPotencial from './DetalleGuiaPotencial';
 
 const GRUPO_ADMIN = "'Direccion','administradores','rrhh'";
+const TIPO = 'guia-potencial';
 
-// Acceso exclusivo Dirección/administradores/RRHH — el colaborador evaluado nunca tiene
-// acceso a estos registros (ver nota de confidencialidad en el maquetado de referencia).
+// RRHH/Dirección/administradores abren un ciclo (ventana de fechas) y, además, conservan el
+// listado completo + alta manual para casos excepcionales. Mientras el ciclo está vigente,
+// cualquier líder ve y completa el formulario de sus reportes directos (1 solo nivel).
 function GuiaPotencialTab() {
     const navigate = useNavigate();
     const baseURL = process.env.REACT_APP_BASE_URL;
@@ -18,9 +22,14 @@ function GuiaPotencialTab() {
 
     const [cargandoInicial, setCargandoInicial] = useState(true);
     const [esAdmin, setEsAdmin] = useState(false);
-    const [vista, setVista] = useState('lista'); // 'lista' | 'nuevo' | 'detalle'
+    const [vista, setVista] = useState('pendientes'); // 'pendientes' | 'listado' | 'ciclos' | 'nuevo' | 'detalle'
+    const [origenDetalle, setOrigenDetalle] = useState('pendientes');
+
+    const [pendientes, setPendientes] = useState({ ciclo: null, items: [] });
     const [registros, setRegistros] = useState([]);
+    const [ciclos, setCiclos] = useState([]);
     const [registroActual, setRegistroActual] = useState(null);
+
     const [guardando, setGuardando] = useState(false);
     const [mensaje, setMensaje] = useState(null);
     const [empleadosBusqueda, setEmpleadosBusqueda] = useState('');
@@ -45,30 +54,67 @@ function GuiaPotencialTab() {
                 admin = false;
             }
             setEsAdmin(admin);
-            if (admin) await cargarRegistros();
+            await cargarPendientes();
             setCargandoInicial(false);
         })();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const cargarRegistros = async () => {
+    const cargarPendientes = async () => {
         try {
-            const response = await axios.get(`${baseURL}/rrhh-formularios/guia-potencial`, axiosConfig);
-            setRegistros(response.data.registros || []);
-            setVista('lista');
+            const response = await axios.get(`${baseURL}/rrhh-formularios/pendientes/${TIPO}`, axiosConfig);
+            setPendientes({ ciclo: response.data.ciclo, items: response.data.items || [] });
         } catch (err) {
             console.log(err);
         }
     };
 
-    const seleccionarRegistro = async (id) => {
+    const cargarListado = async () => {
         try {
-            const response = await axios.get(`${baseURL}/rrhh-formularios/guia-potencial/${id}`, axiosConfig);
-            setRegistroActual(response.data.registro);
+            const response = await axios.get(`${baseURL}/rrhh-formularios/${TIPO}`, axiosConfig);
+            setRegistros(response.data.registros || []);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const cargarCiclos = async () => {
+        try {
+            const response = await axios.get(`${baseURL}/rrhh-formularios/ciclos/${TIPO}`, axiosConfig);
+            setCiclos(response.data.ciclos || []);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const irAVista = async (nuevaVista) => {
+        setVista(nuevaVista);
+        if (nuevaVista === 'pendientes') await cargarPendientes();
+        if (nuevaVista === 'listado') await cargarListado();
+        if (nuevaVista === 'ciclos') await cargarCiclos();
+    };
+
+    const seleccionarRegistro = async (id, origen) => {
+        try {
+            const response = await axios.get(`${baseURL}/rrhh-formularios/${TIPO}/${id}`, axiosConfig);
+            setRegistroActual({ ...response.data.registro, puede_editar: response.data.puede_editar });
+            setOrigenDetalle(origen);
             setVista('detalle');
         } catch (err) {
             console.log(err);
             avisar('error', 'No se pudo cargar el registro seleccionado');
+        }
+    };
+
+    const iniciarRegistro = async (empleadoId) => {
+        setGuardando(true);
+        try {
+            const response = await axios.post(`${baseURL}/rrhh-formularios/iniciar/${TIPO}`, { empleado_id: empleadoId }, axiosConfig);
+            await seleccionarRegistro(response.data.registro.id, 'pendientes');
+        } catch (err) {
+            avisar('error', err.response?.data?.error || 'Error iniciando el formulario');
+        } finally {
+            setGuardando(false);
         }
     };
 
@@ -89,10 +135,9 @@ function GuiaPotencialTab() {
     const crearRegistro = async (payload) => {
         setGuardando(true);
         try {
-            const response = await axios.post(`${baseURL}/rrhh-formularios/guia-potencial`, payload, axiosConfig);
+            const response = await axios.post(`${baseURL}/rrhh-formularios/${TIPO}`, payload, axiosConfig);
             avisar('exito', 'Registro creado correctamente');
-            await cargarRegistros();
-            await seleccionarRegistro(response.data.registro.id);
+            await seleccionarRegistro(response.data.registro.id, 'listado');
         } catch (err) {
             avisar('error', err.response?.data?.error || 'Error creando el registro');
         } finally {
@@ -103,8 +148,8 @@ function GuiaPotencialTab() {
     const guardarRegistro = async (payload) => {
         setGuardando(true);
         try {
-            const response = await axios.put(`${baseURL}/rrhh-formularios/guia-potencial/${registroActual.id}`, payload, axiosConfig);
-            setRegistroActual(response.data.registro);
+            const response = await axios.put(`${baseURL}/rrhh-formularios/${TIPO}/${registroActual.id}`, payload, axiosConfig);
+            setRegistroActual(prev => ({ ...response.data.registro, puede_editar: prev.puede_editar && response.data.registro.estado === 'borrador' }));
             avisar('exito', payload.estado === 'finalizado' ? 'Registro finalizado correctamente' : 'Registro guardado correctamente');
             return true;
         } catch (err) {
@@ -118,9 +163,9 @@ function GuiaPotencialTab() {
     const eliminarRegistro = async () => {
         setGuardando(true);
         try {
-            await axios.delete(`${baseURL}/rrhh-formularios/guia-potencial/${registroActual.id}`, axiosConfig);
+            await axios.delete(`${baseURL}/rrhh-formularios/${TIPO}/${registroActual.id}`, axiosConfig);
             avisar('exito', 'Registro eliminado');
-            volverALista();
+            volver();
         } catch (err) {
             avisar('error', err.response?.data?.error || 'Error eliminando el registro');
         } finally {
@@ -128,30 +173,88 @@ function GuiaPotencialTab() {
         }
     };
 
-    const volverALista = () => {
+    const crearCiclo = async (payload) => {
+        setGuardando(true);
+        try {
+            await axios.post(`${baseURL}/rrhh-formularios/ciclos/${TIPO}`, payload, axiosConfig);
+            avisar('exito', 'Ciclo creado correctamente');
+            await cargarCiclos();
+            return true;
+        } catch (err) {
+            avisar('error', err.response?.data?.error || 'Error creando el ciclo');
+            return false;
+        } finally {
+            setGuardando(false);
+        }
+    };
+
+    const editarCiclo = async (id, payload) => {
+        setGuardando(true);
+        try {
+            await axios.put(`${baseURL}/rrhh-formularios/ciclos/${id}`, payload, axiosConfig);
+            avisar('exito', 'Ciclo actualizado correctamente');
+            await cargarCiclos();
+            return true;
+        } catch (err) {
+            avisar('error', err.response?.data?.error || 'Error actualizando el ciclo');
+            return false;
+        } finally {
+            setGuardando(false);
+        }
+    };
+
+    const eliminarCiclo = async (id) => {
+        setGuardando(true);
+        try {
+            await axios.delete(`${baseURL}/rrhh-formularios/ciclos/${id}`, axiosConfig);
+            avisar('exito', 'Ciclo eliminado');
+            await cargarCiclos();
+        } catch (err) {
+            avisar('error', err.response?.data?.error || 'Error eliminando el ciclo');
+        } finally {
+            setGuardando(false);
+        }
+    };
+
+    const volver = () => {
         setRegistroActual(null);
-        cargarRegistros();
+        irAVista(origenDetalle);
     };
 
     if (cargandoInicial) {
         return <div className="rf-vacio">Cargando...</div>;
     }
 
-    if (!esAdmin) {
-        return <div className="rf-vacio">Acceso exclusivo para Dirección, administradores y RRHH.</div>;
-    }
-
     return (
         <div className="rf-guia-potencial">
-            {vista === 'lista' && (
+            {esAdmin && vista !== 'detalle' && (
+                <div className="rf-subselector">
+                    <a href="#" className={`rf-subselector-boton ${vista === 'pendientes' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); irAVista('pendientes'); }}>Pendientes</a>
+                    <a href="#" className={`rf-subselector-boton ${vista === 'listado' || vista === 'nuevo' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); irAVista('listado'); }}>Listado</a>
+                    <a href="#" className={`rf-subselector-boton ${vista === 'ciclos' ? 'active' : ''}`} onClick={(e) => { e.preventDefault(); irAVista('ciclos'); }}>Ciclos</a>
+                </div>
+            )}
+
+            {mensaje && <div className={`rf-mensaje ${mensaje.tipo}`}>{mensaje.texto}</div>}
+
+            {vista === 'pendientes' && (
+                <PendientesFormulario
+                    ciclo={pendientes.ciclo}
+                    items={pendientes.items}
+                    onCompletar={iniciarRegistro}
+                    onVer={(id) => seleccionarRegistro(id, 'pendientes')}
+                    guardando={guardando}
+                />
+            )}
+
+            {vista === 'listado' && (
                 <>
                     <div className="rf-toolbar">
-                        <button type="button" className="rf-boton-guardar" onClick={() => setVista('nuevo')}>
-                            <i className="material-symbols-outlined">add</i> Nuevo registro
+                        <button type="button" className="rf-boton-guardar" onClick={() => irAVista('nuevo')}>
+                            <i className="material-symbols-outlined">add</i> Alta manual
                         </button>
                     </div>
-                    {mensaje && <div className={`rf-mensaje ${mensaje.tipo}`}>{mensaje.texto}</div>}
-                    <RegistroListGuiaPotencial registros={registros} onSeleccionar={seleccionarRegistro} />
+                    <RegistroListGuiaPotencial registros={registros} onSeleccionar={(id) => seleccionarRegistro(id, 'listado')} />
                 </>
             )}
 
@@ -161,16 +264,29 @@ function GuiaPotencialTab() {
                     busqueda={empleadosBusqueda}
                     onBuscar={buscarEmpleados}
                     onCrear={crearRegistro}
-                    onCancelar={() => setVista('lista')}
+                    onCancelar={() => irAVista('listado')}
                     guardando={guardando}
                     mensaje={mensaje}
+                    baseURL={baseURL}
+                    axiosConfig={axiosConfig}
+                    tipo={TIPO}
+                />
+            )}
+
+            {vista === 'ciclos' && (
+                <GestionCiclos
+                    ciclos={ciclos}
+                    onCrear={crearCiclo}
+                    onEditar={editarCiclo}
+                    onEliminar={eliminarCiclo}
+                    guardando={guardando}
                 />
             )}
 
             {vista === 'detalle' && registroActual && (
                 <>
-                    <button type="button" className="rf-boton-secundario rf-volver" onClick={volverALista}>
-                        <i className="material-symbols-outlined">arrow_back</i> Volver al listado
+                    <button type="button" className="rf-boton-secundario rf-volver" onClick={volver}>
+                        <i className="material-symbols-outlined">arrow_back</i> Volver
                     </button>
                     <DetalleGuiaPotencial
                         registro={registroActual}
