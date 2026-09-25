@@ -108,7 +108,7 @@ function GestionCiclos({ ciclos, onCrear, onEditar, onEliminar, guardando }) {
                                             {esVigente(ciclo) ? 'Vigente' : 'Cerrado'}
                                         </span>
                                     </td>
-                                    <td>
+                                    <td className="rf-registro-list-acciones">
                                         <button type="button" className="rf-boton-secundario" disabled={guardando} onClick={() => iniciarEdicion(ciclo)}>
                                             Editar
                                         </button>
