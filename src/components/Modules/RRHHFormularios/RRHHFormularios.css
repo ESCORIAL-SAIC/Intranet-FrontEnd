@@ -230,7 +230,7 @@
 
 /* BOTONES */
 .rf-boton-guardar, .rf-boton-limpiar, .rf-boton-secundario, .rf-boton-icono { font-family: inherit; font-size: 12.5px; font-weight: 600; border-radius: 8px; padding: 9px 16px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; border: 1px solid transparent; }
-.rf-boton-guardar { background: #0A3D63; color: #fff; }
+.rf-boton-guardar { background: var(--main-esco-color); color: #fff; }
 .rf-boton-guardar:disabled { background: #B4B2A9; cursor: not-allowed; }
 .rf-boton-limpiar { background: #fff; border-color: #D3D1C7; color: #5F5E5A; }
 .rf-boton-limpiar:disabled { opacity: 0.5; cursor: not-allowed; }
