@@ -10,6 +10,7 @@ import './Perfil.css';
 import ListadoIndicadores from "./ListadoIndicadores";
 import ListadoEstudios from "./ListadoEstudios";
 import ListadoCVs from "./ListadoCVs";
+import MiInduccion from "./MiInduccion";
 
 function Perfil(){
     let navigate = useNavigate();
@@ -56,6 +57,7 @@ function Perfil(){
                     <ListadoInsumos/>
                 </div>
                 <div className="perfil-container-right">
+                    <MiInduccion/>
                     <ListadoTareas/>
                     {
                         verIndicadores
