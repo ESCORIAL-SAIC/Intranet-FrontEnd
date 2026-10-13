@@ -46,6 +46,19 @@
 .ri-textarea { min-height: 80px; resize: vertical; margin-bottom: 8px; }
 .ri-nota { font-size: 11px; color: #84939a; margin-top: 4px; }
 
+/* SELECTOR DE EMPLEADO (facilitador) */
+.ri-selector { position: relative; }
+.ri-selector-lista { position: absolute; z-index: 20; top: calc(100% + 4px); left: 0; right: 0; min-width: 240px; max-height: 260px; overflow-y: auto; margin: 0; padding: 4px 0; list-style: none; background: #fff; border: 1px solid #cfd9de; border-radius: 7px; box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+.ri-selector-lista li { padding: 8px 12px; cursor: pointer; }
+.ri-selector-lista li:hover { background: #eef7fb; }
+.ri-selector-lista li.ri-selector-vacio { cursor: default; color: #71818a; font-size: 13px; }
+.ri-selector-lista li.ri-selector-vacio:hover { background: transparent; }
+.ri-selector-nombre { font-size: 13.5px; font-weight: 700; color: #173b50; }
+.ri-selector-sub { font-size: 11.5px; color: #71818a; margin-top: 2px; }
+.ri-selector-elegido { display: flex; align-items: center; gap: 6px; border: 1px solid #a9cbd8; background: #eef7fb; border-radius: 7px; padding: 6px 4px 6px 10px; font-size: 14px; color: #173b50; min-height: 40px; box-sizing: border-box; }
+.ri-selector-elegido > i { font-size: 18px; color: #007eb8; }
+.ri-selector-elegido span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 /* TIPO DE INDUCCIÓN */
 .ri-tipos { display: flex; gap: 14px; flex-wrap: wrap; }
 .ri-tipo { border: 2px solid #d8e0e4; border-radius: 9px; padding: 14px 20px; min-width: 230px; cursor: pointer; background: #fff; }

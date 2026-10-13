@@ -1,3 +1,5 @@
+import SelectorEmpleado from './SelectorEmpleado';
+
 // Tarjeta de configuración de una inducción dentro del roadmap (sección 3 del maquetado).
 // La tarjeta solo se vuelve arrastrable al agarrarla desde el ícono ☷ (onAgarrar), para no
 // interferir con la selección de texto en los inputs.
@@ -39,7 +41,8 @@ function InduccionConfig({ item, index, onChange, onQuitar, onSubir, onBajar, es
                 </div>
                 <div>
                     <label className="ri-label">Facilitador</label>
-                    <input className="ri-input" placeholder="Nombre del facilitador" value={item.facilitador || ''} onChange={set('facilitador')} />
+                    <SelectorEmpleado value={item.facilitador || ''} placeholder="Buscar por nombre o legajo"
+                                      onChange={(nombre) => onChange({ ...item, facilitador: nombre })} />
                 </div>
                 <div>
                     <label className="ri-label">Material</label>
