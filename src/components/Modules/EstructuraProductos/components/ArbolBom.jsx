@@ -3,7 +3,7 @@ import { fmtCosto, fmtCantidad, colorHeatmap, claseModularidad } from '../utils'
 const SinPrecio = () => <span className="ep-no-price">—</span>;
 
 function NodoArbol({ node, ctx }) {
-    const { collapsed, toggle, selectedId, onSelect, filtro, maxCacumHeatmap, modCounts } = ctx;
+    const { collapsed, toggle, selectedId, onSelect, filtro, baseHeatmap, modCounts } = ctx;
     const hasK = node.children.length > 0;
     const cerrado = collapsed.has(node.id);
 
@@ -14,7 +14,7 @@ function NodoArbol({ node, ctx }) {
         clases.push(match ? 'ep-search-match' : 'ep-search-dim');
     }
     if (modCounts) clases.push(claseModularidad(modCounts[(node.code || '').trim()] ?? 1));
-    const style = maxCacumHeatmap != null ? { background: colorHeatmap(node.cacum, maxCacumHeatmap) } : undefined;
+    const style = baseHeatmap != null ? { background: colorHeatmap(node.cacum, baseHeatmap) } : undefined;
 
     return (
         <div className="ep-tree-item" data-level={Math.min(node.nivel, 5)}>
@@ -40,11 +40,11 @@ function NodoArbol({ node, ctx }) {
     );
 }
 
-function ArbolBom({ rootCode, tree, ...ctx }) {
+function ArbolBom({ rootCode, rootTipo, tree, ...ctx }) {
     return (
         <>
             <div className="ep-root-header">
-                <span className="ep-root-badge">PT</span>
+                <span className={`ep-root-badge ${rootTipo === 'COMP' ? 'ep-comp-badge' : ''}`}>{rootTipo}</span>
                 <div>
                     <div className="ep-root-code">{rootCode}</div>
                     <div className="ep-root-hint">Clic en un nodo para seleccionarlo como bloque de exportación</div>

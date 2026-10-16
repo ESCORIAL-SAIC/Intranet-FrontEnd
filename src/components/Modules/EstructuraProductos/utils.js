@@ -77,9 +77,10 @@ export function fmtCantidad(q) {
     return q % 1 === 0 ? q.toFixed(0) : q.toFixed(4).replace(/\.?0+$/, '');
 }
 
-// Fondo pastel de verde (0%) a rojo (100%) según el costo acumulado respecto al más caro del BOM
-export function colorHeatmap(cacum, maxCacum) {
-    const heat = maxCacum > 0 ? (cacum || 0) / maxCacum * 100 : 0;
+// Fondo pastel de verde (0%) a rojo (100%) según el peso del costo acumulado del nodo
+// en el costo total del PT (base = suma del costo acumulado de los nodos de nivel 1)
+export function colorHeatmap(cacum, base) {
+    const heat = base > 0 ? Math.min(100, (cacum || 0) / base * 100) : 0;
     const hue = 120 - heat * 1.2;
     const sat = 65 + heat * 0.15;
     const lit = 92 - heat * 0.08;

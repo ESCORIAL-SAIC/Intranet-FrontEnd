@@ -57,7 +57,7 @@ function BuscadorProductos({ baseURL, axiosConfig, valor, setValor, onSelecciona
 
     const elegir = (prod) => {
         setAbierto(false);
-        onSeleccionar(prod.codigo, prod.descripcion);
+        onSeleccionar(prod.codigo, prod.descripcion, prod.tipo);
     };
 
     const onKeyDownInput = (e) => {
@@ -96,7 +96,10 @@ function BuscadorProductos({ baseURL, axiosConfig, valor, setValor, onSelecciona
                 <div className="ep-dropdown" ref={listaRef} onKeyDown={onKeyDownLista}>
                     {sugerencias.map(prod => (
                         <div key={prod.codigo} className="ep-dd-item" tabIndex={0} onClick={() => elegir(prod)}>
-                            <div className="ep-dd-code"><Resaltado texto={prod.codigo} q={consulta} /></div>
+                            <div className="ep-dd-code">
+                                <span><Resaltado texto={prod.codigo} q={consulta} /></span>
+                                <span className={`ep-dd-badge ${prod.tipo === 'COMP' ? 'comp' : 'pt'}`}>{prod.tipo === 'COMP' ? 'COMP' : 'PT'}</span>
+                            </div>
                             <div className="ep-dd-desc"><Resaltado texto={prod.descripcion} q={consulta} /></div>
                         </div>
                     ))}

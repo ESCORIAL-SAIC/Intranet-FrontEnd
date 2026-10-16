@@ -61,7 +61,8 @@ function EstructuraProductos() {
             costoTotal: costoHojas(tree),
             monedas: monedas.join(' / '),
             conCosto: rows.filter(r => r.costo_unitario != null).length,
-            maxCacum: rows.reduce((m, r) => Math.max(m, r.costo_acumulado || 0), 0),
+            // Base del heatmap: costo total del PT (100% = costo del producto completo)
+            rootCacum: tree.reduce((s, n) => s + (n.cacum || 0), 0),
         };
     }, [rows, tree]);
 
@@ -76,7 +77,7 @@ function EstructuraProductos() {
         setCollapsed(new Set());
     };
 
-    const cargarEstructura = async (codigo, descripcion = '') => {
+    const cargarEstructura = async (codigo, descripcion = '', tipo = 'PT') => {
         codigo = (codigo || '').trim();
         if (!codigo) return;
         const n = ++ultimaCarga.current;
@@ -89,7 +90,7 @@ function EstructuraProductos() {
             const response = await axios.get(`${baseURL}/estructura-productos/estructura`, { ...axiosConfig, params: { codigo } });
             if (n !== ultimaCarga.current) return;
             setRows(response.data);
-            setProducto({ codigo, descripcion });
+            setProducto({ codigo, descripcion, tipo: tipo || 'PT' });
         } catch (err) {
             if (n !== ultimaCarga.current) return;
             console.log(err);
@@ -281,7 +282,7 @@ function EstructuraProductos() {
                     <div className="ep-left-panel">
                         <div className="ep-lp-section">
                             <div className="ep-lp-pt-top">
-                                <span className="ep-root-badge">PT</span>
+                                <span className={`ep-root-badge ${producto.tipo === 'COMP' ? 'ep-comp-badge' : ''}`}>{producto.tipo}</span>
                                 <div className="ep-lp-pt-info">
                                     <div className="ep-lp-pt-code">{producto.codigo}</div>
                                     <div className="ep-lp-pt-desc">{producto.descripcion}</div>
@@ -353,7 +354,7 @@ function EstructuraProductos() {
                                     <span style={{ color: 'hsl(30deg,55%,36%)' }}>75%</span>
                                     <span style={{ color: 'hsl(0deg,55%,38%)' }}>100%</span>
                                 </div>
-                                <div className="ep-lp-legend-item">Porcentaje del <strong>&nbsp;costo acumulado&nbsp;</strong> respecto al componente más caro del BOM.</div>
+                                <div className="ep-lp-legend-item">Porcentaje del <strong>&nbsp;costo acumulado&nbsp;</strong> respecto al costo total del producto (100% = costo del PT).</div>
                             </div>
                         )}
 
@@ -385,13 +386,14 @@ function EstructuraProductos() {
                             {!cargando && hayBom && (
                                 <ArbolBom
                                     rootCode={producto.codigo}
+                                    rootTipo={producto.tipo}
                                     tree={tree}
                                     collapsed={collapsed}
                                     toggle={toggleNodo}
                                     selectedId={selectedId}
                                     onSelect={seleccionarNodo}
                                     filtro={filtroNorm}
-                                    maxCacumHeatmap={heatmap ? resumen.maxCacum : null}
+                                    baseHeatmap={heatmap ? resumen.rootCacum : null}
                                     modCounts={modCounts}
                                 />
                             )}
