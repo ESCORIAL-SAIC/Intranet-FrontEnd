@@ -143,17 +143,26 @@ function RRHHInduccion() {
         setGuardando(false);
     };
 
-    const toggleItem = async (item) => {
+    // Marca/desmarca una actividad del roadmap (inducción, evaluación o encuesta de 1.er mes).
+    const actualizarActividad = async (ruta, completada, mensajeError) => {
         setGuardando(true);
         try {
-            const response = await axios.put(`${baseURL}/induccion/items/${item.id}/completada`, { completada: !item.completada }, axiosConfig);
+            const response = await axios.put(`${baseURL}${ruta}`, { completada }, axiosConfig);
             setRoadmap(response.data.roadmap);
         } catch (err) {
             console.log(err);
-            avisar('error', errorDe(err, 'Error actualizando la inducción'));
+            avisar('error', errorDe(err, mensajeError));
         }
         setGuardando(false);
     };
+
+    const toggleItem = (item) =>
+        actualizarActividad(`/induccion/items/${item.id}/completada`, !item.completada, 'Error actualizando la inducción');
+    const toggleEvaluacion = (item) =>
+        actualizarActividad(`/induccion/items/${item.id}/evaluacion`, !item.evaluacion_completada, 'Error actualizando la evaluación');
+    const toggleEncuesta1Mes = () =>
+        actualizarActividad(`/induccion/roadmaps/${roadmap.id}/encuesta-1mes`, roadmap.encuesta_1mes.estado !== 'completada',
+            'Error actualizando la encuesta de 1.er mes');
 
     const eliminarRoadmap = async () => {
         if (!window.confirm(`¿Eliminar el roadmap de ${roadmap.nombre_snapshot}? Esta acción no se puede deshacer.`)) return;
@@ -184,6 +193,7 @@ function RRHHInduccion() {
                                     onCancelar={() => roadmap ? setVista('detalle') : setVista('seleccion')} />;
             case 'detalle':
                 return <DetalleRoadmap roadmap={roadmap} guardando={guardando} onToggleItem={toggleItem}
+                                       onToggleEvaluacion={toggleEvaluacion} onToggleEncuesta1Mes={toggleEncuesta1Mes}
                                        onEditar={() => setVista('form')} onEliminar={eliminarRoadmap} />;
             default:
                 return <ListadoRoadmaps roadmaps={roadmaps} cargando={cargando} onVer={verRoadmap} onNuevo={irASeleccion} />;

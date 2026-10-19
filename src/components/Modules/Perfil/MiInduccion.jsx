@@ -25,8 +25,9 @@ function MiInduccion(){
             try {
                 const response = await axios.get(`${baseURL}/induccion/mi-induccion`, axiosConfig);
                 setRoadmap(response.data.roadmap);
-                // Una inducción finalizada se muestra colapsada.
-                if (response.data.roadmap && response.data.roadmap.estado === 'finalizado') setAbierto(false);
+                // Una inducción finalizada se muestra colapsada, salvo que tenga la encuesta de 1.er mes pendiente.
+                const r = response.data.roadmap;
+                if (r && r.estado === 'finalizado' && r.encuesta_1mes.estado !== 'pendiente') setAbierto(false);
             } catch (err) {
                 console.log(err);
             }
@@ -46,6 +47,19 @@ function MiInduccion(){
         setGuardando(false);
     };
 
+    const marcarEncuesta1Mes = async () => {
+        setGuardando(true);
+        setError(null);
+        try {
+            const response = await axios.post(`${baseURL}/induccion/mi-induccion/encuesta-1mes`, {}, axiosConfig);
+            setRoadmap(response.data.roadmap);
+        } catch (err) {
+            console.log(err);
+            setError((err.response && err.response.data && err.response.data.error) || 'Error registrando la encuesta de 1.er mes');
+        }
+        setGuardando(false);
+    };
+
     if (!roadmap) return <></>;
 
     const encuestaHabilitada = !roadmap.encuesta_completada && roadmap.items.every(i => i.completada);
@@ -55,7 +69,7 @@ function MiInduccion(){
             <div className="mi-induccion-titulo" onClick={() => setAbierto(!abierto)}>
                 <p className="titulo-tareas-pendientes">Mi Inducción</p>
                 <span className="mi-induccion-resumen">
-                    {roadmap.progreso.porcentaje}% completado
+                    {roadmap.encuesta_1mes.estado === 'pendiente' ? 'Encuesta de 1.er mes pendiente' : `${roadmap.progreso.porcentaje}% completado`}
                     <i className="material-symbols-outlined">{abierto ? 'expand_less' : 'expand_more'}</i>
                 </span>
             </div>
@@ -74,7 +88,11 @@ function MiInduccion(){
                         </div>
                         <RoadmapTimeline items={roadmap.items}
                                          encuestaCompletada={roadmap.encuesta_completada}
-                                         encuestaFecha={roadmap.encuesta_fecha} />
+                                         encuestaFecha={roadmap.encuesta_fecha}
+                                         encuesta1Mes={roadmap.encuesta_1mes}
+                                         onMarcarEncuesta1Mes={marcarEncuesta1Mes}
+                                         deshabilitado={guardando} />
+                        {error && !encuestaHabilitada && <div className="ri-mensaje error">{error}</div>}
                     </section>
 
                     {encuestaHabilitada && (

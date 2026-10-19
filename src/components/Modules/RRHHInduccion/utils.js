@@ -34,6 +34,24 @@ export function ordenarCronologico(items) {
     });
 }
 
+export function sumarDias(fecha, dias) {
+    if (!fecha) return null;
+    const [anio, mes, dia] = fecha.substring(0, 10).split('-').map(Number);
+    const resultado = new Date(anio, mes - 1, dia + dias);
+    return `${resultado.getFullYear()}-${String(resultado.getMonth() + 1).padStart(2, '0')}-${String(resultado.getDate()).padStart(2, '0')}`;
+}
+
+// Mismo criterio que calcularProgreso en el backend: inducciones + evaluaciones asignadas +
+// encuesta de satisfacción (la encuesta de 1.er mes se sigue aparte).
+export function calcularProgreso(items, encuestaCompletada) {
+    const conEvaluacion = items.filter(i => i.evaluacion_tipo);
+    const total = items.length + conEvaluacion.length + 1;
+    const completadas = items.filter(i => i.completada).length
+        + conEvaluacion.filter(i => i.evaluacion_completada).length
+        + (encuestaCompletada ? 1 : 0);
+    return { total, completadas, porcentaje: Math.round((completadas / total) * 100) };
+}
+
 // 'completada' | 'hoy' | 'vencida' | 'pendiente'
 export function estadoItem(item) {
     if (item.completada) return 'completada';

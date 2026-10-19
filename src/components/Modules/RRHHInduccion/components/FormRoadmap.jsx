@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { TIPOS_INDUCCION, PLANTAS } from '../constants';
+import { TIPOS_INDUCCION, PLANTAS, ENCUESTA_1MES_URL } from '../constants';
+import { calcularProgreso, sumarDias, fmtFecha } from '../utils';
 import InduccionConfig from './InduccionConfig';
 import InfoUtil from './InfoUtil';
 import ProgresoInduccion from './ProgresoInduccion';
@@ -19,8 +20,7 @@ function itemDesdeCatalogo(c) {
         ubicacion: '',
         facilitador: '',
         material_url: c.material_url || '',
-        requiere_evaluacion: c.requiere_evaluacion,
-        evaluacion_url: c.evaluacion_url || '',
+        evaluacion_tipo: c.evaluacion_tipo || '',
         observaciones: '',
         completada: false,
     };
@@ -100,7 +100,7 @@ function FormRoadmap({ empleado, roadmap, catalogo, guardando, onGuardar, onCanc
     const agregarPersonalizada = () => {
         const nombre = nombreNueva.trim();
         if (!nombre) return;
-        setItems([...items, itemDesdeCatalogo({ id: null, nombre, duracion_min: 30, requiere_evaluacion: false })]);
+        setItems([...items, itemDesdeCatalogo({ id: null, nombre, duracion_min: 30, evaluacion_tipo: null })]);
         setNombreNueva('');
     };
 
@@ -120,11 +120,10 @@ function FormRoadmap({ empleado, roadmap, catalogo, guardando, onGuardar, onCanc
         onGuardar(payload);
     };
 
-    const progreso = {
-        total: items.length + 1,
-        completadas: items.filter(i => i.completada).length + (roadmap && roadmap.encuesta_completada ? 1 : 0),
-    };
-    progreso.porcentaje = Math.round((progreso.completadas / progreso.total) * 100);
+    const progreso = calcularProgreso(items, roadmap && roadmap.encuesta_completada);
+    // Vista previa: la fecha de habilitación se recalcula con la fecha de ingreso del formulario.
+    const encuesta1Mes = roadmap ? roadmap.encuesta_1mes : { estado: 'no_corresponde' };
+    const encuesta1MesPreview = { ...encuesta1Mes, disponible_desde: sumarDias(datos.fecha_ingreso, 30) };
 
     const faltanFechas = items.some(i => !i.fecha || !i.horario);
 
@@ -247,12 +246,26 @@ function FormRoadmap({ empleado, roadmap, catalogo, guardando, onGuardar, onCanc
                     </div>
                 </div>
 
+                <div className="ri-encuesta-card">
+                    <div className="ri-encuesta-icono"><i className="material-symbols-outlined">calendar_month</i></div>
+                    <div>
+                        <div className="ri-encuesta-titulo">Encuesta de 1.er mes</div>
+                        <div className="ri-encuesta-texto">
+                            Se habilita automáticamente a los 30 días del ingreso
+                            {encuesta1MesPreview.disponible_desde && <> (desde el <strong>{fmtFecha(encuesta1MesPreview.disponible_desde)}</strong>)</>}.
+                            El colaborador la responde en <a href={ENCUESTA_1MES_URL} target="_blank" rel="noreferrer">Forms</a> desde su Perfil.
+                        </div>
+                        <div className="ri-encuesta-estado">Estado: <strong>{encuesta1Mes.estado === 'completada' ? 'Completada' : 'Pendiente'}</strong></div>
+                    </div>
+                </div>
+
                 <div className="ri-card-titulo ri-mt">Vista previa del roadmap</div>
                 {items.length === 0
                     ? <div className="ri-vacio">Agregá al menos una inducción.</div>
                     : <RoadmapTimeline items={items.map((i, idx) => ({ ...i, id: i.key, orden: idx + 1 }))}
                                        encuestaCompletada={roadmap && roadmap.encuesta_completada}
-                                       encuestaFecha={roadmap && roadmap.encuesta_fecha} />}
+                                       encuestaFecha={roadmap && roadmap.encuesta_fecha}
+                                       encuesta1Mes={encuesta1MesPreview} />}
 
                 <div className="ri-card-titulo ri-mt">4. Información útil</div>
                 <InfoUtil infoUtil={infoUtil} onChange={setInfoUtil} />

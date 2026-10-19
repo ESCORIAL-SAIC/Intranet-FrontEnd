@@ -8,6 +8,23 @@ export const TIPOS_INDUCCION = [
 
 export const PLANTAS = ['25 de Mayo', 'Suipacha'];
 
+// Evaluaciones de Forms asignables a una inducción (una por inducción). Los códigos deben
+// coincidir con EVALUACIONES en modules/rrhh-induccion/rrhh-induccion.routes.js.
+export const EVALUACIONES = {
+    rrhh: { label: 'Inducción RRHH', url: 'https://forms.cloud.microsoft/r/g5ZCB9VrLR' },
+    ssma: { label: 'Inducción SSMA', url: 'https://forms.cloud.microsoft/r/uUeSWezQpD' },
+    calidad: { label: 'Inducción Calidad', url: 'https://forms.cloud.microsoft/r/dMZGwasehw' },
+};
+
+// Se habilita a los 30 días del ingreso (DIAS_ENCUESTA_1MES en el backend).
+export const ENCUESTA_1MES_URL = 'https://forms.cloud.microsoft/r/5GqDDNiQ24';
+
+export const ESTADOS_ENCUESTA_1MES = {
+    no_corresponde: { label: 'No corresponde aún', className: 'estado-borrador' },
+    pendiente: { label: 'Pendiente', className: 'estado-curso' },
+    completada: { label: 'Completada', className: 'estado-finalizado' },
+};
+
 export const ESTADOS_ROADMAP = {
     borrador: { label: 'Borrador', className: 'estado-borrador' },
     publicado: { label: 'En curso', className: 'estado-curso' },

@@ -1,3 +1,4 @@
+import { EVALUACIONES } from '../constants';
 import SelectorEmpleado from './SelectorEmpleado';
 
 // Tarjeta de configuración de una inducción dentro del roadmap (sección 3 del maquetado).
@@ -5,6 +6,7 @@ import SelectorEmpleado from './SelectorEmpleado';
 // interferir con la selección de texto en los inputs.
 function InduccionConfig({ item, index, onChange, onQuitar, onSubir, onBajar, esPrimera, esUltima, drag, onAgarrar }) {
     const set = (campo) => (e) => onChange({ ...item, [campo]: e.target.value });
+    const evaluacion = EVALUACIONES[item.evaluacion_tipo];
 
     return (
         <div className={`ri-induccion ${item.completada ? 'completada' : ''}`} {...drag}>
@@ -51,16 +53,17 @@ function InduccionConfig({ item, index, onChange, onQuitar, onSubir, onBajar, es
                 </div>
                 <div>
                     <label className="ri-label">Evaluación</label>
-                    <select className="ri-input" value={item.requiere_evaluacion ? 'si' : 'no'}
-                            onChange={(e) => onChange({ ...item, requiere_evaluacion: e.target.value === 'si' })}>
-                        <option value="no">No</option>
-                        <option value="si">Sí</option>
+                    <select className="ri-input" value={item.evaluacion_tipo || ''} onChange={set('evaluacion_tipo')}>
+                        <option value="">Sin evaluación</option>
+                        {Object.entries(EVALUACIONES).map(([codigo, ev]) => (
+                            <option key={codigo} value={codigo}>{ev.label}</option>
+                        ))}
                     </select>
-                    {item.requiere_evaluacion && (
-                        <>
-                            <div className="ri-evaluacion"><span>Forms</span> Requiere evaluación</div>
-                            <input className="ri-input ri-input-mt" placeholder="Link al Forms" value={item.evaluacion_url || ''} onChange={set('evaluacion_url')} />
-                        </>
+                    {evaluacion && (
+                        <div className="ri-evaluacion">
+                            <span>Forms</span>
+                            <a href={evaluacion.url} target="_blank" rel="noreferrer">Ver formulario</a>
+                        </div>
                     )}
                 </div>
                 <div>
