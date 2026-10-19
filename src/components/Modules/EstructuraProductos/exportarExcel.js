@@ -142,10 +142,14 @@ export async function exportarExcel({ raiz, nodes, conCostos }) {
         ['Producto',    raiz],
         ['Componentes', nodes.length],
         ['Niveles',     nodes.reduce((m, n) => Math.max(m, n.nivel), 0)],
-        ['Con precio',  nodes.filter(n => n.cuv != null).length],
-        ['Sin precio',  nodes.filter(n => n.cuv == null).length],
     ];
-    if (conCostos) sumData.push(['Costo total PT', costoTotal]);
+    if (conCostos) {
+        sumData.push(
+            ['Con precio',     nodes.filter(n => n.cuv != null).length],
+            ['Sin precio',     nodes.filter(n => n.cuv == null).length],
+            ['Costo total PT', costoTotal],
+        );
+    }
     sumData.forEach(([c, v], i) => {
         const r = wsR.addRow({ c, v });
         r.eachCell(cell => {

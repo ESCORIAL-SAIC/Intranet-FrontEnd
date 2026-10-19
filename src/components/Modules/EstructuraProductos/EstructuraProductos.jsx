@@ -26,6 +26,7 @@ function EstructuraProductos() {
     const [collapsed, setCollapsed] = useState(new Set());
     const [selectedId, setSelectedId] = useState(null);
     const [filtro, setFiltro] = useState('');
+    const [puedeVerCostos, setPuedeVerCostos] = useState(false);
     const [costosVis, setCostosVis] = useState(false);
     const [heatmap, setHeatmap] = useState(false);
     const [modCounts, setModCounts] = useState(null);     // { codigo: cantidad de PT } con Modularidad activa
@@ -44,6 +45,11 @@ function EstructuraProductos() {
             return;
         }
         axios.get(`${baseURL}/main`, axiosConfig).catch(() => navigate('/login'));
+        // Los costos solo se muestran a rol_estructura_producto_costo / administradores
+        // (la API además no devuelve precios al resto)
+        axios.get(`${baseURL}/estructura-productos/permisos`, axiosConfig)
+            .then(response => setPuedeVerCostos(response.data.ver_costos === true))
+            .catch(err => console.log(err));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -227,9 +233,11 @@ function EstructuraProductos() {
                     <div className="ep-controls">
                         <button className="ep-btn ep-btn-ghost" onClick={expandirTodo} disabled={grafo}>Expandir todo</button>
                         <button className="ep-btn ep-btn-ghost" onClick={contraerTodo} disabled={grafo}>Contraer todo</button>
-                        <button className={`ep-btn ep-btn-ghost ${costosVis ? 'ep-btn-active' : ''}`} onClick={toggleCostos}>
-                            {costosVis ? 'Ocultar costos' : 'Mostrar costos'}
-                        </button>
+                        {puedeVerCostos && (
+                            <button className={`ep-btn ep-btn-ghost ${costosVis ? 'ep-btn-active' : ''}`} onClick={toggleCostos}>
+                                {costosVis ? 'Ocultar costos' : 'Mostrar costos'}
+                            </button>
+                        )}
                         {costosVis && (
                             <button className={`ep-btn ep-btn-ghost ${heatmap ? 'ep-btn-active' : ''}`} onClick={() => setHeatmap(!heatmap)}>
                                 {heatmap ? 'Heatmap ✓' : 'Heatmap'}
