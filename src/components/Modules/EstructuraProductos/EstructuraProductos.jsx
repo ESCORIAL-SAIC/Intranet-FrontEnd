@@ -12,6 +12,10 @@ import { imprimirBom } from './imprimirBom';
 
 /* ESTRUCTURA DE PRODUCTOS (BOM) — migrado del BOM Viewer de AndonLineasProduccion (files/bom_viewer.html) */
 
+// Botón Ver grafo / Ver árbol deshabilitado: la solapa muestra siempre el árbol.
+// Poner en true para volver a ofrecer la vista de grafo (components/GrafoBom.jsx).
+const VISTA_GRAFO_HABILITADA = false;
+
 function EstructuraProductos() {
     const navigate = useNavigate();
     const baseURL = process.env.REACT_APP_BASE_URL;
@@ -259,9 +263,11 @@ function EstructuraProductos() {
                         <button className={`ep-btn ep-btn-ghost ${modCounts || modCargando ? 'ep-btn-active' : ''}`} onClick={toggleModularidad}>
                             {modCargando ? 'Cargando…' : 'Modularidad'}
                         </button>
-                        <button className="ep-btn ep-btn-ghost" onClick={() => setGrafo(!grafo)}>
-                            {grafo ? '🌳 Ver árbol' : 'Ver grafo'}
-                        </button>
+                        {VISTA_GRAFO_HABILITADA && (
+                            <button className="ep-btn ep-btn-ghost" onClick={() => setGrafo(!grafo)}>
+                                {grafo ? '🌳 Ver árbol' : 'Ver grafo'}
+                            </button>
+                        )}
                         <div className="ep-tree-search-wrap">
                             <input
                                 type="text"
