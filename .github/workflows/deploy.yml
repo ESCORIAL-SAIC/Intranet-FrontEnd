@@ -1,19 +1,67 @@
+# Deploy del frontend a pdc03 (Windows Server + nginx).
+# Corre en el runner self-hosted instalado en pdc03 con la etiqueta "pdc03".
+#
+# Variables del repo (Settings > Secrets and variables > Actions > Variables):
+#   FRONT_DEPLOY_PATH   carpeta que sirve nginx (root), ej: C:\nginx\html\intranet
+#   DEPLOY_BACKUP_PATH  carpeta de backups, ej: C:\deploy-backups
+#   REACT_APP_BASE_URL  URL de la API que se compila dentro del build
+
 name: Deploy Frontend
 
 on:
   push:
-    branches: [ "dev", "main" ]
+    branches: [ "main" ]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-frontend
+  cancel-in-progress: false
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, Windows, pdc03 ]
+    defaults:
+      run:
+        shell: powershell
+    env:
+      DEPLOY_PATH: ${{ vars.FRONT_DEPLOY_PATH }}
+      BACKUP_ROOT: ${{ vars.DEPLOY_BACKUP_PATH }}
     steps:
-      - name: SSH Deploy Frontend
-        uses: appleboy/ssh-action@v1.1.0
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            cd /var/www/project
-            ./deploy.sh frontend ${{ github.ref_name }}
+      - uses: actions/checkout@v4
+
+      - name: Validar configuracion
+        run: |
+          if (-not $env:DEPLOY_PATH) { throw "Falta la variable FRONT_DEPLOY_PATH" }
+          if (-not $env:BACKUP_ROOT) { throw "Falta la variable DEPLOY_BACKUP_PATH" }
+          node --version
+          npm --version
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Build
+        env:
+          # En Actions CI=true hace que react-scripts trate los warnings como errores
+          CI: "false"
+          REACT_APP_BASE_URL: ${{ vars.REACT_APP_BASE_URL }}
+        run: npm run build
+
+      - name: Backup de la version publicada
+        run: |
+          if (Test-Path $env:DEPLOY_PATH) {
+            $dest = Join-Path $env:BACKUP_ROOT ("frontend\" + (Get-Date -Format "yyyyMMdd-HHmmss"))
+            robocopy $env:DEPLOY_PATH $dest /E /NFL /NDL /NJH /NP
+            if ($LASTEXITCODE -ge 8) { throw "Fallo el backup (robocopy $LASTEXITCODE)" }
+            # Conservar solo los ultimos 10 backups
+            Get-ChildItem (Join-Path $env:BACKUP_ROOT "frontend") -Directory |
+              Sort-Object Name -Descending | Select-Object -Skip 10 |
+              Remove-Item -Recurse -Force
+          }
+          exit 0
+
+      - name: Publicar build
+        run: |
+          # /MIR deja la carpeta de nginx identica a build/ (borra lo que sobre)
+          robocopy build $env:DEPLOY_PATH /MIR /NFL /NDL /NJH /NP
+          if ($LASTEXITCODE -ge 8) { throw "Fallo la copia (robocopy $LASTEXITCODE)" }
+          exit 0
