@@ -8,6 +8,7 @@ import ArbolBom from './components/ArbolBom';
 import GrafoBom from './components/GrafoBom';
 import { buildTree, costoHojas, flattenNode, idsConHijos, fmtCosto } from './utils';
 import { exportarExcel } from './exportarExcel';
+import { imprimirBom } from './imprimirBom';
 
 /* ESTRUCTURA DE PRODUCTOS (BOM) — migrado del BOM Viewer de AndonLineasProduccion (files/bom_viewer.html) */
 
@@ -208,6 +209,18 @@ function EstructuraProductos() {
         }
     };
 
+    // Imprime el bloque seleccionado o el BOM completo
+    const imprimir = () => {
+        if (!tree.length) return;
+        const ok = imprimirBom({
+            codigo: producto?.codigo,
+            descripcion: producto?.descripcion,
+            nodes: selectedNode ? [selectedNode] : tree,
+            conCostos: costosVis,
+        });
+        if (!ok) alert('Habilitá las ventanas emergentes para imprimir.');
+    };
+
     const hayBom = !!producto && rows.length > 0;
     const filtroNorm = filtro.trim().toLowerCase();
 
@@ -264,6 +277,7 @@ function EstructuraProductos() {
                         <button className="ep-btn ep-btn-green" onClick={exportar} disabled={exportando}>
                             {exportando ? '⏳ Generando…' : '↓ Exportar Excel'}
                         </button>
+                        <button className="ep-btn ep-btn-ghost" onClick={imprimir}>🖨 Imprimir</button>
                     </div>
                 )}
             </div>
