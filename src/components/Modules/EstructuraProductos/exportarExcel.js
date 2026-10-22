@@ -8,6 +8,7 @@ const FG_HDR   = 'FFFFFFFF';
 const FG_MAIN  = 'FF1A2332';
 const FG_MUTED = 'FF6B7A8D';
 const FG_AMBER = 'FFC67000';
+const FG_TEAL  = 'FF00695C';  // columnas USD
 const LEVEL_FG = { 1: 'FF1565C0', 2: 'FF2E7D32', 3: 'FFC67000', 4: 'FF6A1B9A', 5: 'FF00695C' };
 
 const font = (argb, size = 10, bold = false) => ({ bold, color: { argb }, name: 'Calibri', size });
@@ -40,6 +41,10 @@ export async function exportarExcel({ raiz, nodes, conCostos }) {
             { header: 'Costo nivel', key: 'cniv',  width: 14 },
             { header: 'Costo acum.', key: 'cacum', width: 14 },
             { header: 'Moneda',      key: 'mon',   width: 8 },
+            { header: 'Nivel USD',    key: 'cniv_usd',  width: 14 },
+            { header: 'Acum. USD',    key: 'cacum_usd', width: 14 },
+            { header: 'Cotiz.',       key: 'cotiz',     width: 10 },
+            { header: 'Fecha precio', key: 'fprec',     width: 13 },
         );
     }
     ws.columns = cols;
@@ -68,6 +73,10 @@ export async function exportarExcel({ raiz, nodes, conCostos }) {
             // Costo acumulado solo en las hojas de costo, para que la suma de la columna = total
             rd.cacum = node.isCostLeaf ? node.cacum : null;
             rd.mon   = node.mon || '';
+            rd.cniv_usd  = node.cniv_usd ?? null;
+            rd.cacum_usd = node.isCostLeaf ? node.cacum_usd ?? null : null;
+            rd.cotiz     = node.cotizacion ?? null;
+            rd.fprec     = node.fecha_precio || null;
         }
 
         const row = ws.addRow(rd);
@@ -105,15 +114,26 @@ export async function exportarExcel({ raiz, nodes, conCostos }) {
             if (node.cniv == null) row.getCell('cniv').value = '—';
             estiloCosto(row.getCell('cacum'), rd.cacum, font(FG_AMBER));
             row.getCell('mon').font = font(FG_MUTED, 9);
+            estiloCosto(row.getCell('cniv_usd'), node.cniv_usd, font(FG_TEAL));
+            if (node.cniv_usd == null) row.getCell('cniv_usd').value = '—';
+            estiloCosto(row.getCell('cacum_usd'), rd.cacum_usd, font(FG_TEAL, 10, true));
+            estiloCosto(row.getCell('cotiz'), node.cotizacion, font(FG_MUTED, 9));
+            if (node.cotizacion == null) row.getCell('cotiz').value = '—';
+            row.getCell('fprec').font = font(FG_MUTED, 9);
         }
     });
 
     const costoTotal = nodes.filter(n => n.isCostLeaf).reduce((s, n) => s + (n.cacum || 0), 0);
+    const costoTotalUSD = nodes.filter(n => n.isCostLeaf).reduce((s, n) => s + (n.cacum_usd || 0), 0);
 
     if (conCostos) {
         const mon = nodes.find(n => n.mon)?.mon || '';
         ws.addRow({});
-        const totRow = ws.addRow({ code: 'COSTO TOTAL PRODUCTO TERMINADO', cacum: costoTotal, mon });
+        const totRow = ws.addRow({
+            code: 'COSTO TOTAL PRODUCTO TERMINADO',
+            cacum: costoTotal, mon,
+            cacum_usd: costoTotalUSD > 0 ? costoTotalUSD : null,
+        });
         totRow.height = 22;
         totRow.eachCell({ includeEmpty: true }, cell => {
             cell.fill = fill(BG_HDR);
@@ -127,6 +147,12 @@ export async function exportarExcel({ raiz, nodes, conCostos }) {
         tCost.alignment = { horizontal: 'right', vertical: 'middle' };
         tCost.font = font(FG_AMBER, 11, true);
         totRow.getCell('mon').font = font(FG_AMBER, 10, true);
+        if (costoTotalUSD > 0) {
+            const tUSD = totRow.getCell('cacum_usd');
+            tUSD.numFmt = '#,##0.00';
+            tUSD.alignment = { horizontal: 'right', vertical: 'middle' };
+            tUSD.font = font(FG_TEAL, 11, true);
+        }
     }
 
     ws.autoFilter = { from: 'A1', to: { row: 1, column: cols.length } };
@@ -149,6 +175,7 @@ export async function exportarExcel({ raiz, nodes, conCostos }) {
             ['Sin precio',     nodes.filter(n => n.cuv == null).length],
             ['Costo total PT', costoTotal],
         );
+        if (costoTotalUSD > 0) sumData.push(['Costo total USD', costoTotalUSD]);
     }
     sumData.forEach(([c, v], i) => {
         const r = wsR.addRow({ c, v });
@@ -159,6 +186,10 @@ export async function exportarExcel({ raiz, nodes, conCostos }) {
         if (c === 'Costo total PT') {
             r.getCell('v').numFmt = '#,##0.00';
             r.getCell('v').font = font(FG_AMBER, 11, true);
+        }
+        if (c === 'Costo total USD') {
+            r.getCell('v').numFmt = '#,##0.00';
+            r.getCell('v').font = font(FG_TEAL, 11, true);
         }
     });
 

@@ -6,7 +6,7 @@ import './EstructuraProductos.css';
 import BuscadorProductos from './components/BuscadorProductos';
 import ArbolBom from './components/ArbolBom';
 import GrafoBom from './components/GrafoBom';
-import { buildTree, costoHojas, flattenNode, idsConHijos, fmtCosto } from './utils';
+import { buildTree, costoHojas, costoHojasUSD, calcularPareto, resumenCotizacion, flattenNode, idsConHijos, fmtCosto } from './utils';
 import { exportarExcel } from './exportarExcel';
 import { imprimirBom } from './imprimirBom';
 
@@ -72,10 +72,12 @@ function EstructuraProductos() {
             costoTotal: costoHojas(tree),
             monedas: monedas.join(' / '),
             conCosto: rows.filter(r => r.costo_unitario != null).length,
-            // Base del heatmap: costo total del PT (100% = costo del producto completo)
-            rootCacum: tree.reduce((s, n) => s + (n.cacum || 0), 0),
+            costoTotalUSD: costoHojasUSD(tree),
+            cotizInfo: resumenCotizacion(nodeMap),
         };
-    }, [rows, tree]);
+    }, [rows, tree, nodeMap]);
+
+    const pareto = useMemo(() => heatmap ? calcularPareto(nodeMap) : null, [heatmap, nodeMap]);
 
     const resetModos = () => {
         setHeatmap(false);
@@ -166,7 +168,7 @@ function EstructuraProductos() {
     const contraerTodo = () => setCollapsed(new Set(idsConHijos(tree)));
 
     const toggleCostos = () => {
-        if (costosVis) setHeatmap(false); // el heatmap depende de los costos
+        if (costosVis) setHeatmap(false); // el ABC (heatmap Pareto) depende de los costos
         setCostosVis(!costosVis);
     };
 
@@ -257,7 +259,7 @@ function EstructuraProductos() {
                         )}
                         {costosVis && (
                             <button className={`ep-btn ep-btn-ghost ${heatmap ? 'ep-btn-active' : ''}`} onClick={() => setHeatmap(!heatmap)}>
-                                {heatmap ? 'Heatmap ✓' : 'Heatmap'}
+                                {heatmap ? 'ABC ✓' : 'ABC'}
                             </button>
                         )}
                         <button className={`ep-btn ep-btn-ghost ${modCounts || modCargando ? 'ep-btn-active' : ''}`} onClick={toggleModularidad}>
@@ -300,6 +302,13 @@ function EstructuraProductos() {
                             <div className="ep-stat-lbl">Costo total PT</div>
                             <div className="ep-stat-val">{fmtCosto(resumen.costoTotal)}</div>
                             <div className="ep-stat-sub">{resumen.monedas}</div>
+                        </div>
+                    )}
+                    {costosVis && resumen.costoTotalUSD > 0 && (
+                        <div className="ep-stat ep-c-teal">
+                            <div className="ep-stat-lbl">Costo total USD</div>
+                            <div className="ep-stat-val ep-stat-val-usd">{fmtCosto(resumen.costoTotalUSD)}</div>
+                            <div className="ep-stat-sub">{resumen.cotizInfo}</div>
                         </div>
                     )}
                 </div>
@@ -371,18 +380,17 @@ function EstructuraProductos() {
                             </div>
                         )}
 
-                        {heatmap && (
+                        {pareto && (
                             <div className="ep-lp-section">
-                                <div className="ep-lp-legend-title">Heatmap de costo</div>
-                                <div className="ep-heatmap-gradient"></div>
-                                <div className="ep-heatmap-scale">
-                                    <span style={{ color: 'hsl(120deg,55%,38%)' }}>0%</span>
-                                    <span style={{ color: 'hsl(90deg,50%,36%)' }}>25%</span>
-                                    <span style={{ color: 'hsl(60deg,55%,34%)' }}>50%</span>
-                                    <span style={{ color: 'hsl(30deg,55%,36%)' }}>75%</span>
-                                    <span style={{ color: 'hsl(0deg,55%,38%)' }}>100%</span>
-                                </div>
-                                <div className="ep-lp-legend-item">Porcentaje del <strong>&nbsp;costo acumulado&nbsp;</strong> respecto al costo total del producto (100% = costo del PT).</div>
+                                <div className="ep-lp-legend-title">Heatmap — Pareto 80/20</div>
+                                <div className="ep-lp-legend-item"><span className="ep-leg-dot ep-leg-red"></span> <strong>Clase A</strong> — acumulan el 80% del costo</div>
+                                <div className="ep-lp-legend-item"><span className="ep-leg-dot ep-leg-grey"></span> Clase B/C — restante</div>
+                                {pareto.total > 0 && (
+                                    <div className="ep-pareto-info">
+                                        <strong>{pareto.claseA.size}</strong> insumo{pareto.claseA.size !== 1 ? 's' : ''} concentran el 80% del costo<br />
+                                        <span className="ep-text-error">{fmtCosto(pareto.acumA)} {pareto.moneda}</span> de {fmtCosto(pareto.total)} {pareto.moneda} total
+                                    </div>
+                                )}
                             </div>
                         )}
 
@@ -421,7 +429,7 @@ function EstructuraProductos() {
                                     selectedId={selectedId}
                                     onSelect={seleccionarNodo}
                                     filtro={filtroNorm}
-                                    baseHeatmap={heatmap ? resumen.rootCacum : null}
+                                    paretoA={pareto ? pareto.claseA : null}
                                     modCounts={modCounts}
                                 />
                             )}

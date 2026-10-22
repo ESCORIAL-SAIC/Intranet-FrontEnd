@@ -21,6 +21,11 @@ export function buildTree(rows) {
             cniv:  row.costo_nivel,      // cuv × cantidad del nivel
             cacum: row.costo_acumulado,  // cuv × cantidad acumulada desde la raíz
             mon:   row.moneda,
+            cuv_usd:    row.costo_unitario_usd,   // dolarizados con la cotización del día del precio
+            cniv_usd:   row.costo_nivel_usd,
+            cacum_usd:  row.costo_acumulado_usd,
+            cotizacion: row.cotizacion_usd,       // pesos por dólar usados para dolarizar
+            fecha_precio: row.fecha_precio,       // 'YYYY-MM-DD' de la última modificación del precio
             children: [],
         };
         nodeMap.set(node.id, node);
@@ -77,14 +82,51 @@ export function fmtCantidad(q) {
     return q % 1 === 0 ? q.toFixed(0) : q.toFixed(4).replace(/\.?0+$/, '');
 }
 
-// Fondo pastel de verde (0%) a rojo (100%) según el peso del costo acumulado del nodo
-// en el costo total del PT (base = suma del costo acumulado de los nodos de nivel 1)
-export function colorHeatmap(cacum, base) {
-    const heat = base > 0 ? Math.min(100, (cacum || 0) / base * 100) : 0;
-    const hue = 120 - heat * 1.2;
-    const sat = 65 + heat * 0.15;
-    const lit = 92 - heat * 0.08;
-    return `hsl(${hue}deg,${sat}%,${lit}%)`;
+// Total en USD: misma regla que costoHojas, sumando el costo acumulado dolarizado de las hojas de costo
+export function costoHojasUSD(nodos) {
+    let s = 0;
+    for (const n of nodos) {
+        if (n.isCostLeaf) s += n.cacum_usd || 0;
+        else s += costoHojasUSD(n.children);
+    }
+    return s;
+}
+
+// Clasificación ABC (Pareto 80/20): ordena las hojas de costo por costo acumulado de mayor a menor
+// y marca como clase A las que completan el primer 80% del costo total. El resto es B/C.
+export function calcularPareto(nodeMap) {
+    const hojas = [...nodeMap.values()]
+        .filter(n => n.isCostLeaf && n.cacum != null && n.cacum > 0)
+        .sort((a, b) => b.cacum - a.cacum);
+    const total = hojas.reduce((s, n) => s + n.cacum, 0);
+    const claseA = new Set();
+    let acumA = 0;
+    for (const n of hojas) {
+        acumA += n.cacum;
+        claseA.add(n.id);
+        if (total > 0 && acumA >= total * 0.8) break;
+    }
+    return { claseA, acumA, total, moneda: hojas[0]?.mon || '' };
+}
+
+// Texto "Cotiz. $X | dd/mm/aaaa" (o rangos) con las cotizaciones y fechas usadas en las hojas de costo
+export function resumenCotizacion(nodeMap) {
+    const hojas = [...nodeMap.values()].filter(n => n.isCostLeaf && n.cotizacion != null);
+    if (!hojas.length) return '';
+    const cotiz = [...new Set(hojas.map(n => n.cotizacion))].sort((a, b) => a - b);
+    const fechas = [...new Set(hojas.map(n => n.fecha_precio).filter(Boolean))].sort();
+    const fmtFecha = fmtFechaPrecio;
+    const cotizTxt = cotiz.length === 1
+        ? `$${fmtCosto(cotiz[0])}`
+        : `$${fmtCosto(cotiz[0])} – $${fmtCosto(cotiz[cotiz.length - 1])}`;
+    const fechaTxt = fechas.length > 1
+        ? `${fmtFecha(fechas[0])} – ${fmtFecha(fechas[fechas.length - 1])}`
+        : fmtFecha(fechas[0]);
+    return `Cotiz. ${cotizTxt} | ${fechaTxt}`;
+}
+
+export function fmtFechaPrecio(f) {
+    return f ? f.split('-').reverse().join('/') : '';
 }
 
 // Clasificación de modularidad según cuántos productos terminados usan el componente

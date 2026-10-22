@@ -1,9 +1,9 @@
-import { fmtCosto, fmtCantidad, colorHeatmap, claseModularidad } from '../utils';
+import { fmtCosto, fmtCantidad, fmtFechaPrecio, claseModularidad } from '../utils';
 
 const SinPrecio = () => <span className="ep-no-price">—</span>;
 
 function NodoArbol({ node, ctx }) {
-    const { collapsed, toggle, selectedId, onSelect, filtro, baseHeatmap, modCounts } = ctx;
+    const { collapsed, toggle, selectedId, onSelect, filtro, paretoA, modCounts } = ctx;
     const hasK = node.children.length > 0;
     const cerrado = collapsed.has(node.id);
 
@@ -14,11 +14,15 @@ function NodoArbol({ node, ctx }) {
         clases.push(match ? 'ep-search-match' : 'ep-search-dim');
     }
     if (modCounts) clases.push(claseModularidad(modCounts[(node.code || '').trim()] ?? 1));
-    const style = baseHeatmap != null ? { background: colorHeatmap(node.cacum, baseHeatmap) } : undefined;
+    // ABC (Pareto 80/20): solo se clasifican las hojas de costo
+    if (paretoA && node.isCostLeaf) clases.push(paretoA.has(node.id) ? 'ep-pareto-a' : 'ep-pareto-bc');
+    const usdTitle = node.cotizacion != null
+        ? `U$S × cant. (cotiz. $${fmtCosto(node.cotizacion)} al ${fmtFechaPrecio(node.fecha_precio)})`
+        : 'Sin cotización disponible';
 
     return (
         <div className="ep-tree-item" data-level={Math.min(node.nivel, 5)}>
-            <div className={clases.join(' ')} style={style} onClick={() => onSelect(node.id)}>
+            <div className={clases.join(' ')} onClick={() => onSelect(node.id)}>
                 {hasK
                     ? <button className={`ep-toggle-btn ${cerrado ? '' : 'open'}`}
                               onClick={(e) => { e.stopPropagation(); toggle(node.id); }}>{cerrado ? '+' : '−'}</button>
@@ -29,6 +33,7 @@ function NodoArbol({ node, ctx }) {
                 <span className="ep-cost-col ep-cost-unit" title="Precio unitario">{node.cuv != null ? fmtCosto(node.cuv) : <SinPrecio />}</span>
                 <span className="ep-cost-col ep-cost-ext" title="Precio × cantidad">{node.cniv != null ? fmtCosto(node.cniv) : <SinPrecio />}</span>
                 <span className="ep-cost-col ep-cost-mon">{node.mon || ''}</span>
+                <span className="ep-cost-col ep-cost-usd" title={usdTitle}>U$S {node.cniv_usd != null ? fmtCosto(node.cniv_usd) : <SinPrecio />}</span>
                 {hasK && <span className="ep-node-kids">{node.children.length}</span>}
             </div>
             {hasK && !cerrado && (

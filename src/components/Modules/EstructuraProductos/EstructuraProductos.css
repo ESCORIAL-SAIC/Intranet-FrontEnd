@@ -63,6 +63,9 @@
 .ep-stat-sub { font-size: .7rem; color: var(--ep-muted); }
 .ep-stat.ep-c-blue { border-left: 3px solid var(--ep-blue); }
 .ep-stat.ep-c-amber { border-left: 3px solid var(--ep-amber); }
+.ep-stat.ep-c-teal { border-left: 3px solid var(--ep-teal); }
+.ep-stat-val-usd { color: var(--ep-teal); }
+.ep-c-teal .ep-stat-sub { margin-top: 2px; line-height: 1.35; }
 
 /* MAIN SPLIT */
 .ep-main-split { display: flex; gap: 14px; min-height: 0; align-items: flex-start; }
@@ -98,8 +101,8 @@
 /* Leyendas */
 .ep-lp-legend-title { font-weight: 700; font-size: .82rem; margin-bottom: 8px; }
 .ep-lp-legend-item { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: .78rem; color: var(--ep-muted); padding: 3px 0; line-height: 1.4; }
-.ep-heatmap-gradient { height: 10px; border-radius: 4px; background: linear-gradient(to right, hsl(120deg,68%,88%), hsl(60deg,70%,87%), hsl(0deg,68%,88%)); margin-bottom: 8px; }
-.ep-heatmap-scale { display: flex; justify-content: space-between; font-size: .72rem; margin-bottom: 7px; }
+.ep-pareto-info { margin-top: 8px; font-size: .72rem; color: var(--ep-muted); line-height: 1.4; }
+.ep-leg-red { background: var(--ep-red); }
 .ep-leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
 .ep-leg-blue { background: var(--ep-blue); }
 .ep-leg-amber { background: var(--ep-amber); }
@@ -109,6 +112,10 @@
 .ep-tree-row.ep-mod-platform { border-left: 4px solid var(--ep-blue) !important; background: rgba(21,101,192,.13) !important; }
 .ep-tree-row.ep-mod-variant { border-left: 4px solid var(--ep-amber) !important; background: rgba(198,112,0,.13) !important; }
 .ep-tree-row.ep-mod-unique { border-left: 4px solid #ccc !important; }
+
+/* ABC (Pareto 80/20): clase A resaltada en rojo, B/C atenuadas */
+.ep-tree-row.ep-pareto-a { background: rgba(198,40,40,.08) !important; border-left: 3px solid var(--ep-red) !important; }
+.ep-tree-row.ep-pareto-bc { opacity: .45; }
 
 /* TREE AREA */
 .ep-tree-area { flex: 1; min-width: 0; }
@@ -144,6 +151,7 @@
 .ep-cost-unit { min-width: 90px; color: var(--ep-muted); }
 .ep-cost-ext { min-width: 90px; color: var(--ep-amber); font-weight: 600; }
 .ep-cost-mon { font-size: .68rem; color: var(--ep-muted); min-width: 30px; }
+.ep-cost-usd { min-width: 80px; color: var(--ep-teal); font-weight: 600; }
 .ep-no-price { color: rgba(0,0,0,.25); font-style: italic; }
 
 /* Colores por nivel */
