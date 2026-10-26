@@ -1,19 +1,85 @@
+# Deploy del front al servidor Docker de la intranet.
+# Corre en el runner self-hosted instalado en ese servidor (etiqueta "intranet"):
+# construye la imagen ahi mismo y reinicia solo el contenedor "web" del stack
+# /opt/docker/intranet (el docker-compose.yml lo mantiene el repo Intranet-API).
+# Si el contenedor nuevo no queda healthy, vuelve a levantar la imagen anterior.
+
 name: Deploy Frontend
 
 on:
   push:
-    branches: [ "dev", "main" ]
+    branches: [ "main" ]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-frontend
+  cancel-in-progress: false
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: [ self-hosted, Linux, intranet ]
+    env:
+      STACK_DIR: /opt/docker/intranet
+      SERVICE: web
+      IMAGE: intranet-web
+    defaults:
+      run:
+        shell: bash
     steps:
-      - name: SSH Deploy Frontend
-        uses: appleboy/ssh-action@v1.1.0
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            cd /var/www/project
-            ./deploy.sh frontend ${{ github.ref_name }}
+      - uses: actions/checkout@v4
+
+      - name: Validar servidor
+        run: |
+          set -euo pipefail
+          test -f "$STACK_DIR/docker-compose.yml" || { echo "::error::Falta $STACK_DIR/docker-compose.yml (se crea con el primer deploy de Intranet-API)"; exit 1; }
+          docker version --format 'Docker {{.Server.Version}}'
+
+      # Archivos que el build necesita y no estan en git (ej. los CSV del
+      # organigrama, ignorados por *.csv). Se copian respetando la ruta:
+      # web-overlay/src/... -> src/...
+      - name: Copiar archivos fuera de git
+        run: |
+          if [ -d "$STACK_DIR/web-overlay" ]; then
+            cp -rv "$STACK_DIR/web-overlay/." .
+          fi
+
+      - name: Build de la imagen
+        run: docker build --pull -t "$IMAGE:candidate" .
+
+      - name: Levantar la version nueva
+        working-directory: ${{ env.STACK_DIR }}
+        run: |
+          set -euo pipefail
+          if docker image inspect "$IMAGE:latest" >/dev/null 2>&1; then
+            docker tag "$IMAGE:latest" "$IMAGE:previous"
+          fi
+          docker tag "$IMAGE:candidate" "$IMAGE:latest"
+          docker compose up -d --no-deps "$SERVICE"
+
+      - name: Esperar healthcheck (rollback si falla)
+        working-directory: ${{ env.STACK_DIR }}
+        run: |
+          set -uo pipefail
+          deadline=$((SECONDS + 150))
+          while [ "$SECONDS" -lt "$deadline" ]; do
+            status=$(docker inspect -f '{{.State.Health.Status}}' "$(docker compose ps -q "$SERVICE")" 2>/dev/null || echo unknown)
+            echo "Estado: $status"
+            case "$status" in
+              healthy) exit 0 ;;
+              unhealthy) break ;;
+            esac
+            sleep 5
+          done
+          echo "::error::$SERVICE no quedo healthy, vuelvo a la version anterior"
+          docker compose logs --tail 100 "$SERVICE"
+          if docker image inspect "$IMAGE:previous" >/dev/null 2>&1; then
+            docker tag "$IMAGE:previous" "$IMAGE:latest"
+            docker compose up -d --no-deps "$SERVICE"
+          fi
+          exit 1
+
+      - name: Limpiar imagenes viejas
+        if: always()
+        run: |
+          docker rmi "$IMAGE:candidate" >/dev/null 2>&1 || true
+          docker image prune -f
