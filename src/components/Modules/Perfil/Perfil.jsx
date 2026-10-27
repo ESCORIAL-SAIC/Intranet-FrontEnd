@@ -9,6 +9,7 @@ import banner from '../../../img/banner2.jpg';
 import './Perfil.css';
 import ListadoIndicadores from "./ListadoIndicadores";
 import ListadoEstudios from "./ListadoEstudios";
+import ListadoCVs from "./ListadoCVs";
 
 function Perfil(){
     let navigate = useNavigate();
@@ -61,6 +62,7 @@ function Perfil(){
                         ? <ListadoIndicadores/>
                         : <></>
                     }
+                    <ListadoCVs/>
                     <ListadoEstudios/>
                 </div>
             </div>

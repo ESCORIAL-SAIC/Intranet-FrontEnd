@@ -30,7 +30,9 @@ const OrganigramaAdm = (props) => {
         process.env.PUBLIC_URL + '/organigrama/organigramaAdm.csv'
       ).then((data) => {
         setData(data);
-        setFecha(data[0].actualizado);
+        data[0]
+        ?setFecha(data[0].actualizado)
+        :setFecha('-');
       });
     }).catch(err => {
         navigate('/')

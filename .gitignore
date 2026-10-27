@@ -30,3 +30,6 @@ yarn-error.log*
 
 #organigrama (en produccion lo sirve nginx desde /opt/docker/intranet/organigrama)
 /public/organigrama/
+
+# Material de referencia para prompting (mockups, manuales, informes), no es codigo de la app
+src/components/Modules/info-prompts/
