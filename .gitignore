@@ -28,6 +28,5 @@ yarn-error.log*
 
 *.csv
 
-#organigrama
-/src/components/Modules/OrganigramaAdm/organigrama.csv
-/src/components/Modules/Organigrama/organigrama.csv
+#organigrama (en produccion lo sirve nginx desde /opt/docker/intranet/organigrama)
+/public/organigrama/

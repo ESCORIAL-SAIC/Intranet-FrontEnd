@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { render } from 'react-dom';
 import { OrgChartComponent } from './OrgChart';
 import * as d3 from 'd3';
-import csv from './organigrama.csv';
 import './Organigrama.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -26,8 +25,10 @@ const Organigrama = (props) => {
         navigate('/login')
     })
 
+    // El CSV no esta en git: en produccion lo sirve nginx desde el servidor,
+    // en desarrollo va en public/organigrama/
     d3.csv(
-      csv
+      process.env.PUBLIC_URL + '/organigrama/organigrama.csv'
     ).then((data) => {
       setData(data);
       setFecha(data[0].actualizado)
