@@ -1,5 +1,6 @@
 // Exportación a Excel del BOM (misma planilla que generaba el BOM Viewer del Andon).
 // exceljs se carga bajo demanda para no sumarlo al bundle inicial de la intranet.
+import { fechaCotizacion } from './utils';
 
 const BG_HDR   = 'FF1565C0';
 const BG_ODD   = 'FFF0F2F5';
@@ -76,7 +77,7 @@ export async function exportarExcel({ raiz, nodes, conCostos }) {
             rd.cniv_usd  = node.cniv_usd ?? null;
             rd.cacum_usd = node.isCostLeaf ? node.cacum_usd ?? null : null;
             rd.cotiz     = node.cotizacion ?? null;
-            rd.fprec     = node.fecha_precio || null;
+            rd.fprec     = fechaCotizacion(node) || null;
         }
 
         const row = ws.addRow(rd);

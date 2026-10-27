@@ -1,30 +1,6 @@
 // Impresión del BOM como árbol jerárquico (misma salida que el botón Imprimir del BOM Viewer del Andon).
 // Abre una ventana con la estructura en formato A4 y lanza el diálogo de impresión.
-import { fmtCosto, fmtCantidad } from './utils';
-
-const UM_ABREV = {
-    'unidad': 'Un.', 'unidades': 'Un.',
-    'kilogramo': 'Kg.', 'kilogramos': 'Kg.',
-    'gramo': 'Gr.', 'gramos': 'Gr.',
-    'metro': 'm.', 'metros': 'm.',
-    'centimetro': 'cm.', 'centimetros': 'cm.',
-    'milimetro': 'mm.', 'milimetros': 'mm.',
-    'litro': 'Lt.', 'litros': 'Lt.',
-    'mililitro': 'ml.', 'mililitros': 'ml.',
-    'hora': 'h.', 'horas': 'h.',
-    'juego': 'Jgo.', 'juegos': 'Jgo.',
-    'par': 'Par', 'pares': 'Par',
-    'rollo': 'Roll.', 'rollos': 'Roll.',
-    'bobina': 'Bob.', 'bobinas': 'Bob.',
-    'plancha': 'Pl.', 'planchas': 'Pl.',
-    'hoja': 'Hj.', 'hojas': 'Hj.',
-    'pieza': 'Pz.', 'piezas': 'Pz.',
-};
-
-function abrevUm(um) {
-    if (!um) return '';
-    return UM_ABREV[um.trim().toLowerCase()] || um.trim();
-}
+import { fmtCosto, fmtCantidad, abrevUm } from './utils';
 
 function he(s) {
     return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -65,11 +41,9 @@ export function imprimirBom({ codigo, descripcion, nodes, conCostos }) {
     const html = `<!DOCTYPE html><html lang="es"><head>
 <meta charset="UTF-8">
 <title>BOM — ${he(codigo)}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *    { box-sizing:border-box; margin:0; padding:0; }
-body { font-family:'JetBrains Mono','Cascadia Code','Consolas',monospace; font-size:9.5px; color:#1a2332; margin:8mm 10mm; }
+body { font-family:'Courier New',Courier,monospace; font-size:9.5px; color:#1a2332; margin:8mm 10mm; }
 h1   { font-family:Arial,sans-serif; font-size:13px; color:#1565c0; border-bottom:2px solid #1565c0; padding-bottom:4px; margin-bottom:3px; }
 .sub { font-family:Arial,sans-serif; font-size:9px; color:#6b7a8d; display:block; margin-bottom:12px; }
 .bom-row { display:flex; align-items:stretch; }
