@@ -127,9 +127,9 @@
 .ep-root-code { font-size: 1rem; font-weight: 800; color: var(--ep-blue); }
 .ep-root-hint { font-size: .72rem; color: var(--ep-muted); margin-top: 3px; }
 
-.ep-tree-children { position: relative; margin-left: 16px; padding-left: 16px; border-left: 1px solid rgba(0,0,0,.12); }
+/* La sangría por nivel va como padding-left en cada fila (ArbolBom) para alinear las columnas */
+.ep-tree-children { position: relative; }
 .ep-tree-item { position: relative; padding: 1px 0; }
-.ep-tree-children > .ep-tree-item > .ep-tree-row::before { content: ''; position: absolute; left: -16px; top: 50%; width: 16px; height: 1px; background: rgba(0,0,0,.12); }
 .ep-tree-row { position: relative; display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 6px; cursor: pointer; transition: .1s; min-height: 32px; border: 1px solid transparent; }
 .ep-tree-row:hover { background: rgba(21,101,192,.06); }
 .ep-tree-row.selected { background: rgba(46,125,50,.08); border-color: rgba(46,125,50,.35); }
@@ -141,17 +141,20 @@
 
 .ep-node-code { font-weight: 700; font-size: .82rem; letter-spacing: .02em; white-space: nowrap; min-width: 90px; }
 .ep-node-desc { font-size: .81rem; color: var(--ep-muted); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-.ep-node-qty { font-size: .8rem; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; min-width: 60px; text-align: right; }
-.ep-node-um { font-size: .7rem; color: var(--ep-muted); margin-left: 2px; }
-.ep-node-kids { font-size: .65rem; color: var(--ep-muted); background: var(--ep-card2); border: 1px solid var(--ep-rule); border-radius: 10px; padding: 1px 7px; white-space: nowrap; }
+/* Columnas de la derecha con ancho fijo para que queden alineadas en todos los niveles */
+.ep-tree-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.ep-node-qty { font-size: .8rem; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; width: 60px; flex-shrink: 0; text-align: right; }
+.ep-node-um { font-size: .7rem; color: var(--ep-muted); white-space: nowrap; width: 34px; flex-shrink: 0; }
+.ep-node-kids-col { width: 26px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.ep-node-kids { font-size: .65rem; color: var(--ep-muted); background: var(--ep-card2); border: 1px solid var(--ep-rule); border-radius: 10px; padding: 1px 6px; white-space: nowrap; }
 
 /* Columnas de costo: ocultas hasta "Mostrar costos" */
-.ep-cost-col { display: none; font-size: .78rem; font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+.ep-cost-col { display: none; font-size: .78rem; font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; flex-shrink: 0; }
 .ep-costos-visibles .ep-cost-col { display: block; }
-.ep-cost-unit { min-width: 90px; color: var(--ep-muted); }
-.ep-cost-ext { min-width: 90px; color: var(--ep-amber); font-weight: 600; }
-.ep-cost-mon { font-size: .68rem; color: var(--ep-muted); min-width: 30px; }
-.ep-cost-usd { min-width: 80px; color: var(--ep-teal); font-weight: 600; }
+.ep-cost-unit { width: 88px; color: var(--ep-muted); }
+.ep-cost-ext { width: 88px; color: var(--ep-amber); font-weight: 600; }
+.ep-cost-mon { font-size: .68rem; color: var(--ep-muted); width: 32px; text-align: left; }
+.ep-cost-usd { width: 74px; color: var(--ep-teal); font-weight: 600; }
 .ep-no-price { color: rgba(0,0,0,.25); font-style: italic; }
 
 /* Colores por nivel */

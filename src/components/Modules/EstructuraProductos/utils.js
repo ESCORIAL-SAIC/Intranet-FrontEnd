@@ -24,8 +24,9 @@ export function buildTree(rows) {
             cuv_usd:    row.costo_unitario_usd,   // dolarizados con la cotización del día del precio
             cniv_usd:   row.costo_nivel_usd,
             cacum_usd:  row.costo_acumulado_usd,
-            cotizacion: row.cotizacion_usd,       // pesos por dólar usados para dolarizar
+            cotizacion: row.cotizacion_usd,       // pesos por dólar usados para dolarizar (única para todo el BOM)
             fecha_precio: row.fecha_precio,       // 'YYYY-MM-DD' de la última modificación del precio
+            fecha_cot_ref: row.fecha_cot_ref,     // 'YYYY-MM-DD' de la cotización: última modificación del BOM
             children: [],
         };
         nodeMap.set(node.id, node);
@@ -114,7 +115,7 @@ export function resumenCotizacion(nodeMap) {
     const hojas = [...nodeMap.values()].filter(n => n.isCostLeaf && n.cotizacion != null);
     if (!hojas.length) return '';
     const cotiz = [...new Set(hojas.map(n => n.cotizacion))].sort((a, b) => a - b);
-    const fechas = [...new Set(hojas.map(n => n.fecha_precio).filter(Boolean))].sort();
+    const fechas = [...new Set(hojas.map(fechaCotizacion).filter(Boolean))].sort();
     const fmtFecha = fmtFechaPrecio;
     const cotizTxt = cotiz.length === 1
         ? `$${fmtCosto(cotiz[0])}`
@@ -127,6 +128,36 @@ export function resumenCotizacion(nodeMap) {
 
 export function fmtFechaPrecio(f) {
     return f ? f.split('-').reverse().join('/') : '';
+}
+
+// Fecha a la que corresponde la cotización usada para dolarizar el nodo
+export function fechaCotizacion(node) {
+    return node.fecha_cot_ref || node.fecha_precio || '';
+}
+
+const UM_ABREV = {
+    'unidad': 'Un.', 'unidades': 'Un.',
+    'kilogramo': 'Kg.', 'kilogramos': 'Kg.',
+    'gramo': 'Gr.', 'gramos': 'Gr.',
+    'metro': 'm.', 'metros': 'm.',
+    'centimetro': 'cm.', 'centimetros': 'cm.',
+    'milimetro': 'mm.', 'milimetros': 'mm.',
+    'litro': 'Lt.', 'litros': 'Lt.',
+    'mililitro': 'ml.', 'mililitros': 'ml.',
+    'hora': 'h.', 'horas': 'h.',
+    'juego': 'Jgo.', 'juegos': 'Jgo.',
+    'par': 'Par', 'pares': 'Par',
+    'rollo': 'Roll.', 'rollos': 'Roll.',
+    'bobina': 'Bob.', 'bobinas': 'Bob.',
+    'plancha': 'Pl.', 'planchas': 'Pl.',
+    'hoja': 'Hj.', 'hojas': 'Hj.',
+    'pieza': 'Pz.', 'piezas': 'Pz.',
+};
+
+// Unidad de medida abreviada (árbol e impresión); si no está en la tabla se muestra tal cual
+export function abrevUm(um) {
+    if (!um) return '';
+    return UM_ABREV[um.trim().toLowerCase()] || um.trim();
 }
 
 // Clasificación de modularidad según cuántos productos terminados usan el componente
