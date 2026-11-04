@@ -29,6 +29,9 @@ export default function NueveBox() {
   const [draggedItem, setDraggedItem] = useState(null);
   const [showNewRegistroForm, setShowNewRegistroForm] = useState(false);
   const [toast, setToast] = useState(null);
+  // Habilitación del Talent Review: sin Guía de Potencial + Riesgo e Impacto del equipo no se
+  // puede crear un registro (el backend valida lo mismo en POST /nuevebox).
+  const [habilitacion, setHabilitacion] = useState(null);
   const toastTimeoutRef = useRef(null);
 
   const axiosConfig = { headers: { Authorization: token } };
@@ -43,6 +46,9 @@ export default function NueveBox() {
     if (token) {
       axios.get(`${baseURL}/main`, axiosConfig).catch(() => navigate('/login'));
       cargarRegistros();
+      axios.get(`${baseURL}/talent-review/habilitacion-9box`, axiosConfig)
+        .then(r => setHabilitacion(r.data))
+        .catch(() => setHabilitacion(null));
     } else {
       navigate('/login');
     }
@@ -226,9 +232,20 @@ export default function NueveBox() {
         </section>
 
         <div style={{ margin: '20px', marginBottom: '20px' }}>
-          <button className="btn" onClick={() => setShowNewRegistroForm(!showNewRegistroForm)}>
+          <button
+            className="btn"
+            onClick={() => setShowNewRegistroForm(!showNewRegistroForm)}
+            disabled={habilitacion?.habilitado === false}
+          >
             {showNewRegistroForm ? 'Cancelar' : '+ Nuevo Registro'}
           </button>
+          {habilitacion?.habilitado === false && (
+            <p style={{ marginTop: '10px', fontSize: '13px', color: '#67625a' }}>
+              {habilitacion.motivo} El 9-box se habilita cuando la Guía de Potencial y el formulario de
+              Riesgo e Impacto están finalizados para todo tu equipo.{' '}
+              <a href="/talent-review">Ver mis pendientes en Talent Review</a>
+            </p>
+          )}
           {showNewRegistroForm && (
             <NuevoRegistroForm onCrear={crearRegistro} loading={loading} />
           )}
