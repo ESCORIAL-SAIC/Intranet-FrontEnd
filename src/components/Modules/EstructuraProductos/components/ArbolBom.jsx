@@ -50,14 +50,14 @@ function NodoArbol({ node, ctx }) {
     );
 }
 
-function ArbolBom({ rootCode, rootTipo, tree, ...ctx }) {
+function ArbolBom({ rootCode, rootTipo, tree, onRootClick, ...ctx }) {
     return (
         <>
-            <div className="ep-root-header">
+            <div className="ep-root-header ep-root-header-click" onClick={onRootClick} title="Ver en qué productos se usa">
                 <span className={`ep-root-badge ${rootTipo === 'COMP' ? 'ep-comp-badge' : ''}`}>{rootTipo}</span>
                 <div>
                     <div className="ep-root-code">{rootCode}</div>
-                    <div className="ep-root-hint">Clic en un nodo para seleccionarlo como bloque de exportación</div>
+                    <div className="ep-root-hint">Clic para ver en qué productos se usa · Clic en un nodo del árbol para seleccionar bloque</div>
                 </div>
             </div>
             <div>
