@@ -6,6 +6,7 @@ import './EstructuraProductos.css';
 import BuscadorProductos from './components/BuscadorProductos';
 import ArbolBom from './components/ArbolBom';
 import GrafoBom from './components/GrafoBom';
+import CompararBom from './components/CompararBom';
 import { buildTree, costoHojas, costoHojasUSD, calcularPareto, resumenCotizacion, flattenNode, idsConHijos, fmtCosto } from './utils';
 import { exportarExcel } from './exportarExcel';
 import { imprimirBom } from './imprimirBom';
@@ -22,8 +23,9 @@ function EstructuraProductos() {
     const token = localStorage.getItem('token');
     const axiosConfig = { headers: { Authorization: token } };
 
+    const [pagina, setPagina] = useState('estructura');   // 'estructura' | 'comparar'
     const [busqueda, setBusqueda] = useState('');
-    const [producto, setProducto] = useState(null);       // { codigo, descripcion } del PT cargado
+    const [producto, setProducto] = useState(null);       // { codigo, descripcion, tipo, hoja } del producto cargado
     const [rows, setRows] = useState([]);
     const [cargando, setCargando] = useState(false);
     const [error, setError] = useState(null);
@@ -38,7 +40,8 @@ function EstructuraProductos() {
     const [modCargando, setModCargando] = useState(false);
     const [modError, setModError] = useState(false);
     const [grafo, setGrafo] = useState(false);
-    const [dondeSeUsa, setDondeSeUsa] = useState(null);   // { cargando, error, items }
+    const [dondeSeUsa, setDondeSeUsa] = useState(null);   // { cargando, error, items, codigo }
+    const [usoRaiz, setUsoRaiz] = useState(false);        // panel "dónde se usa" abierto para la raíz
     const [exportando, setExportando] = useState(false);
 
     const treeOuterRef = useRef(null);
@@ -87,10 +90,11 @@ function EstructuraProductos() {
         setFiltro('');
         setSelectedId(null);
         setDondeSeUsa(null);
+        setUsoRaiz(false);
         setCollapsed(new Set());
     };
 
-    const cargarEstructura = async (codigo, descripcion = '', tipo = 'PT') => {
+    const cargarEstructura = async (codigo, descripcion = '', tipo = 'PT', hoja = false) => {
         codigo = (codigo || '').trim();
         if (!codigo) return;
         const n = ++ultimaCarga.current;
@@ -98,6 +102,13 @@ function EstructuraProductos() {
         resetModos();
         setRows([]);
         setError(null);
+        if (hoja) {
+            // Componente sin estructura propia: no hay árbol, solo "dónde se usa"
+            setCargando(false);
+            setProducto({ codigo, descripcion, tipo: tipo || 'COMP', hoja: true });
+            cargarDondeSeUsa(codigo, codigo);
+            return;
+        }
         setCargando(true);
         try {
             const response = await axios.get(`${baseURL}/estructura-productos/estructura`, { ...axiosConfig, params: { codigo } });
@@ -124,8 +135,23 @@ function EstructuraProductos() {
         resetModos();
     };
 
-    // ── Selección de nodo + "dónde se usa" ───────────────────────
-    const seleccionarNodo = async (id) => {
+    // ── "Dónde se usa": nodo seleccionado, raíz o componente hoja ─
+    // Productos terminados que usan el código, sin contar el producto cargado (excluir)
+    const cargarDondeSeUsa = async (codigo, excluir = producto?.codigo) => {
+        setDondeSeUsa({ cargando: true, error: false, items: [], codigo });
+        try {
+            const response = await axios.get(`${baseURL}/estructura-productos/donde-se-usa`, { ...axiosConfig, params: { codigo } });
+            setDondeSeUsa(prev => prev?.codigo !== codigo ? prev : {
+                cargando: false, error: false, codigo,
+                items: response.data.filter(item => item.codigo !== excluir),
+            });
+        } catch (err) {
+            console.log(err);
+            setDondeSeUsa(prev => prev?.codigo !== codigo ? prev : { cargando: false, error: true, items: [], codigo });
+        }
+    };
+
+    const seleccionarNodo = (id) => {
         if (selectedId === id) {
             setSelectedId(null);
             setDondeSeUsa(null);
@@ -134,17 +160,14 @@ function EstructuraProductos() {
         const node = nodeMap.get(id);
         if (!node) return;
         setSelectedId(id);
-        setDondeSeUsa({ cargando: true, error: false, items: [], codigo: node.code });
-        try {
-            const response = await axios.get(`${baseURL}/estructura-productos/donde-se-usa`, { ...axiosConfig, params: { codigo: node.code } });
-            setDondeSeUsa(prev => prev?.codigo !== node.code ? prev : {
-                cargando: false, error: false, codigo: node.code,
-                items: response.data.filter(item => item.codigo !== producto?.codigo),
-            });
-        } catch (err) {
-            console.log(err);
-            setDondeSeUsa(prev => prev?.codigo !== node.code ? prev : { cargando: false, error: true, items: [], codigo: node.code });
-        }
+        setUsoRaiz(false);
+        cargarDondeSeUsa(node.code);
+    };
+
+    const verUsoRaiz = () => {
+        setSelectedId(null);
+        setUsoRaiz(true);
+        cargarDondeSeUsa(producto.codigo);
     };
 
     const seleccionarPorCodigo = (code) => {
@@ -155,6 +178,7 @@ function EstructuraProductos() {
 
     const deseleccionar = () => {
         setSelectedId(null);
+        setUsoRaiz(false);
         setDondeSeUsa(null);
     };
 
@@ -228,7 +252,16 @@ function EstructuraProductos() {
     };
 
     const hayBom = !!producto && rows.length > 0;
+    const esHoja = !!producto?.hoja;
     const filtroNorm = filtro.trim().toLowerCase();
+
+    // Panel "dónde se usa": nodo seleccionado, o la raíz (al clickear el encabezado / componente hoja)
+    let nodoPanel = null;
+    if (selectedNode) {
+        nodoPanel = { code: selectedNode.code, desc: selectedNode.desc, titulo: '🔗 Nodo seleccionado', vacio: 'Solo se usa en este producto.' };
+    } else if (producto && (usoRaiz || esHoja)) {
+        nodoPanel = { code: producto.codigo, desc: producto.descripcion, titulo: esHoja ? '🔗 Componente' : '🔗 Producto cargado', vacio: 'No se usa en otros productos.' };
+    }
 
     return (
         <div className={`ep-estructura-productos ${costosVis ? 'ep-costos-visibles' : ''}`}>
@@ -237,6 +270,17 @@ function EstructuraProductos() {
                 <div className="ep-hdr-sub">BOM Viewer · Lista de materiales</div>
             </div>
 
+            <div className="ep-tab-bar">
+                <button className={`ep-tab-btn ${pagina === 'estructura' ? 'active' : ''}`} onClick={() => setPagina('estructura')}>Estructura</button>
+                <button className={`ep-tab-btn ${pagina === 'comparar' ? 'active' : ''}`} onClick={() => setPagina('comparar')}>⇌ Comparar</button>
+            </div>
+
+            {/* Las dos pestañas quedan montadas para no perder lo cargado al cambiar de una a otra */}
+            <div className="ep-pagina" style={{ display: pagina === 'comparar' ? '' : 'none' }}>
+                <CompararBom baseURL={baseURL} axiosConfig={axiosConfig} />
+            </div>
+
+            <div className="ep-pagina" style={{ display: pagina === 'estructura' ? '' : 'none' }}>
             <div className="ep-search-bar">
                 <BuscadorProductos
                     baseURL={baseURL}
@@ -315,7 +359,7 @@ function EstructuraProductos() {
             )}
 
             <div className="ep-main-split">
-                {hayBom && (
+                {(hayBom || esHoja) && (
                     <div className="ep-left-panel">
                         <div className="ep-lp-section">
                             <div className="ep-lp-pt-top">
@@ -342,16 +386,18 @@ function EstructuraProductos() {
                             )}
                         </div>
 
-                        {(selectedNode || modError) && (
+                        {(nodoPanel || modError) && (
                             <div className="ep-lp-section">
                                 <div className="ep-panel-header">
-                                    <span>{selectedNode ? '🔗 Nodo seleccionado' : '⚠ Modularidad'}</span>
-                                    <button className="ep-panel-close" onClick={() => { deseleccionar(); setModError(false); }}>✕</button>
+                                    <span>{nodoPanel ? nodoPanel.titulo : '⚠ Modularidad'}</span>
+                                    {!(esHoja && !selectedNode) && (
+                                        <button className="ep-panel-close" onClick={() => { deseleccionar(); setModError(false); }}>✕</button>
+                                    )}
                                 </div>
-                                {selectedNode ? (
+                                {nodoPanel ? (
                                     <>
-                                        <div className="ep-panel-nodo-code">{selectedNode.code}</div>
-                                        <div className="ep-panel-nodo-desc">{selectedNode.desc}</div>
+                                        <div className="ep-panel-nodo-code">{nodoPanel.code}</div>
+                                        <div className="ep-panel-nodo-desc">{nodoPanel.desc}</div>
                                         {dondeSeUsa?.cargando && (
                                             <div className="ep-panel-loading"><div className="ep-spinner"></div><span>Cargando…</span></div>
                                         )}
@@ -360,7 +406,7 @@ function EstructuraProductos() {
                                         )}
                                         {dondeSeUsa && !dondeSeUsa.cargando && !dondeSeUsa.error && (
                                             dondeSeUsa.items.length === 0
-                                                ? <div className="ep-panel-msg">Solo se usa en este producto.</div>
+                                                ? <div className="ep-panel-msg">{nodoPanel.vacio}</div>
                                                 : <>
                                                     <div className="ep-panel-nodo-usado-lbl">Usado en estos productos</div>
                                                     <div className="ep-use-chip-list">
@@ -412,7 +458,14 @@ function EstructuraProductos() {
                         <div className="ep-tree-outer" ref={treeOuterRef}>
                             {cargando && <div className="ep-loading"><div className="ep-spinner"></div>Cargando estructura…</div>}
                             {!cargando && error && <div className="ep-error-msg">⚠ {error}</div>}
-                            {!cargando && !error && !hayBom && (
+                            {!cargando && !error && esHoja && (
+                                <div className="ep-hoja-msg">
+                                    <div className="ep-hoja-code">{producto.codigo}</div>
+                                    <div>Este componente no tiene subcomponentes en la estructura.</div>
+                                    <div className="ep-hoja-sub">En el panel izquierdo podés ver en qué productos se usa.</div>
+                                </div>
+                            )}
+                            {!cargando && !error && !hayBom && !esHoja && (
                                 <div className="ep-placeholder">
                                     <span className="material-symbols-outlined ep-placeholder-icon">account_tree</span>
                                     <div>Hacé clic en el buscador para ver el listado de productos</div>
@@ -423,6 +476,7 @@ function EstructuraProductos() {
                                 <ArbolBom
                                     rootCode={producto.codigo}
                                     rootTipo={producto.tipo}
+                                    onRootClick={verUsoRaiz}
                                     tree={tree}
                                     collapsed={collapsed}
                                     toggle={toggleNodo}
@@ -436,6 +490,7 @@ function EstructuraProductos() {
                         </div>
                     )}
                 </div>
+            </div>
             </div>
         </div>
     );

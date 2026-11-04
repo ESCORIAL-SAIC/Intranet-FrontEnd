@@ -79,6 +79,11 @@ export function fmtCosto(v) {
     return v.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+// 'YYYY-MM-DD' en hora local (toISOString usa UTC: de noche en Argentina daba el día siguiente)
+export function fechaLocalISO(d = new Date()) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 export function fmtCantidad(q) {
     return q % 1 === 0 ? q.toFixed(0) : q.toFixed(4).replace(/\.?0+$/, '');
 }

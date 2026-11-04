@@ -1,6 +1,6 @@
 // Exportación a Excel del BOM (misma planilla que generaba el BOM Viewer del Andon).
 // exceljs se carga bajo demanda para no sumarlo al bundle inicial de la intranet.
-import { fechaCotizacion } from './utils';
+import { fechaCotizacion, fechaLocalISO } from './utils';
 
 const BG_HDR   = 'FF1565C0';
 const BG_ODD   = 'FFF0F2F5';
@@ -194,12 +194,17 @@ export async function exportarExcel({ raiz, nodes, conCostos }) {
         }
     });
 
+    await descargarXlsx(wb, `BOM_${raiz}_${fechaLocalISO()}.xlsx`);
+}
+
+// Genera el .xlsx del workbook y lo descarga con el nombre indicado
+export async function descargarXlsx(wb, nombre) {
     const buffer = await wb.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `BOM_${raiz}_${new Date().toISOString().slice(0, 10)}.xlsx`;
+    a.download = nombre;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

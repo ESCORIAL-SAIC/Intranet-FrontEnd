@@ -11,7 +11,9 @@ function Resaltado({ texto, q }) {
 }
 
 // Input con autocompletado de productos terminados. Al hacer foco lista los primeros sin filtro.
-function BuscadorProductos({ baseURL, axiosConfig, valor, setValor, onSeleccionar, onLimpiar }) {
+// onSeleccionar(codigo, descripcion, tipo, hoja): hoja = componente sin estructura propia
+function BuscadorProductos({ baseURL, axiosConfig, valor, setValor, onSeleccionar, onLimpiar,
+                             placeholder = 'Clic para ver productos o escribí para filtrar…' }) {
     const [sugerencias, setSugerencias] = useState([]);
     const [abierto, setAbierto] = useState(false);
     const [consulta, setConsulta] = useState('');
@@ -57,11 +59,16 @@ function BuscadorProductos({ baseURL, axiosConfig, valor, setValor, onSelecciona
 
     const elegir = (prod) => {
         setAbierto(false);
-        onSeleccionar(prod.codigo, prod.descripcion, prod.tipo);
+        onSeleccionar(prod.codigo, prod.descripcion, prod.tipo, prod.hoja === true);
     };
 
     const onKeyDownInput = (e) => {
-        if (e.key === 'Enter') { setAbierto(false); onSeleccionar(valor.trim()); }
+        if (e.key === 'Enter') {
+            // Si el código tipeado está entre las sugerencias se usan sus datos (descripción, tipo, hoja)
+            const exacto = sugerencias.find(p => p.codigo.trim() === valor.trim());
+            if (exacto) elegir(exacto);
+            else { setAbierto(false); onSeleccionar(valor.trim()); }
+        }
         if (e.key === 'Escape') setAbierto(false);
         if (e.key === 'ArrowDown') { e.preventDefault(); listaRef.current?.querySelector('.ep-dd-item')?.focus(); }
     };
@@ -81,7 +88,7 @@ function BuscadorProductos({ baseURL, axiosConfig, valor, setValor, onSelecciona
                 ref={inputRef}
                 type="text"
                 className="ep-search-inp"
-                placeholder="Clic para ver productos o escribí para filtrar…"
+                placeholder={placeholder}
                 autoComplete="off"
                 spellCheck="false"
                 value={valor}
