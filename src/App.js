@@ -8,6 +8,7 @@ import Main from './components/Modules/Main/Main';
 import Login from './components/Login/Login';
 import CircuitoCompras from './components/Modules/CircuitoCompras/CircuitoCompras';
 import OrganigramaAdm from './components/Modules/OrganigramaAdm/OrganigramaAdm';
+import OrganigramaGer from './components/Modules/OrganigramaGer/OrganigramaGer';
 import OrganigramaAdmRF from './components/Modules/OrganigramaAdmRF/OrganigramaAdmRF';
 import CargaComunicaciones from './components/Modules/CargaComunicaciones/CargaComunicaciones';
 import CargaObjetivosGer from './components/Modules/CargaObjetivosGer/CargaObjetivosGer';
@@ -51,6 +52,7 @@ function App() {
           <Route path="/archive-explorer" element={<div className='m-container'><MenuBar/><ArchiveExplorer/></div>}></Route>
           <Route path="/organigrama" element={<div className='m-container'><MenuBar/><Organigrama/></div>}></Route>
           <Route path="/organigrama-adm" element={<div className='m-container'><MenuBar/><OrganigramaAdm/></div>}></Route>
+          <Route path="/organigrama-ger" element={<div className='m-container'><MenuBar/><OrganigramaGer/></div>}></Route>
           <Route path="/organigrama-adm-rf" element={<div className='m-container'><MenuBar/><OrganigramaAdmRF/></div>}></Route>
           <Route path="/circuito-compras" element={<div className='m-container'><MenuBar/><CircuitoCompras/></div>}></Route>
           <Route path="/carga-comunicaciones" element={<div className='m-container'><MenuBar/><CargaComunicaciones/></div>}></Route>
