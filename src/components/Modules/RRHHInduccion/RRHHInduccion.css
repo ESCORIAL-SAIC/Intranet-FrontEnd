@@ -136,6 +136,11 @@
 .ri-timeline-evaluacion-texto { flex: 1; }
 .ri-timeline-evaluacion a { color: #007eb8; font-weight: 700; }
 .ri-timeline-acciones { display: flex; gap: 8px; flex-wrap: wrap; }
+.ri-timeline-teams { display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box; padding: 8px 12px; border-radius: 8px; background: #eef1fb; font-size: 13px; color: #4f6875; }
+.ri-timeline-teams.error { background: #fdeeee; }
+.ri-timeline-teams > i { font-size: 18px; color: #5b5fc7; }
+.ri-timeline-teams a { color: #5b5fc7; font-weight: 700; }
+.ri-alerta-accion { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 
 /* CHIPS DE ESTADO */
 .ri-chip { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px; white-space: nowrap; background: #eef1f3; color: #536873; }

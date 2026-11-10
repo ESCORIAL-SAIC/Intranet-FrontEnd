@@ -5,8 +5,17 @@ import { ordenarCronologico, estadoItem, ESTADOS_ITEM, fmtFecha, fmtFechaHora } 
 // satisfacción y encuesta de 1.er mes.
 // Vista RRHH: onToggle / onToggleEvaluacion / onToggleEncuesta1Mes marcan y desmarcan cada actividad.
 // Vista colaborador: onMarcarEncuesta1Mes le permite indicar que ya respondió la encuesta de 1.er mes.
+// Sala de la reunión de Teams de una inducción (solo vista RRHH).
+function EstadoSala({ item }) {
+    const sala = item.sala_nombre || item.sala_email;
+    if (!sala) return <span className="ri-chip estado-borrador">Solo Teams</span>;
+    if (item.teams_sala_estado === 'reservada') return <span className="ri-chip item-completada">{sala} reservada</span>;
+    if (item.teams_sala_estado === 'no_disponible') return <span className="ri-chip estado-curso" title="La sala estaba ocupada en ese horario">{sala} ocupada · solo Teams</span>;
+    return <span className="ri-chip estado-borrador" title="No se pudo verificar la disponibilidad; la sala confirma la reserva por mail">{sala} (sin confirmar)</span>;
+}
+
 function RoadmapTimeline({ items, encuestaCompletada, encuestaFecha, encuesta1Mes, onToggle, onToggleEvaluacion,
-                           onToggleEncuesta1Mes, onMarcarEncuesta1Mes, deshabilitado }) {
+                           onToggleEncuesta1Mes, onMarcarEncuesta1Mes, mostrarTeams, deshabilitado }) {
     const ordenados = ordenarCronologico(items);
     const todasCompletas = items.every(i => i.completada);
     const e1m = encuesta1Mes || { estado: 'no_corresponde' };
@@ -67,6 +76,19 @@ function RoadmapTimeline({ items, encuestaCompletada, encuestaFecha, encuesta1Me
                                     <span className={`ri-chip ${item.evaluacion_completada ? 'item-completada' : 'item-pendiente'}`}>
                                         {item.evaluacion_completada ? 'Realizada' : 'Pendiente'}
                                     </span>
+                                </div>
+                            )}
+
+                            {mostrarTeams && (item.teams_event_id || item.teams_error) && (
+                                <div className={`ri-timeline-teams ${item.teams_error ? 'error' : ''}`}>
+                                    <i className="material-symbols-outlined">videocam</i>
+                                    <div className="ri-timeline-evaluacion-texto">
+                                        {item.teams_join_url
+                                            ? <a href={item.teams_join_url} target="_blank" rel="noreferrer">Reunión de Teams (RRHH)</a>
+                                            : <span>Reunión de Teams (RRHH)</span>}
+                                        {item.teams_error && <div className="ri-texto-alerta">No se pudo sincronizar: {item.teams_error}</div>}
+                                    </div>
+                                    {item.teams_event_id && <EstadoSala item={item} />}
                                 </div>
                             )}
 

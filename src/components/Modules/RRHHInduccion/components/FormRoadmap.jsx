@@ -32,7 +32,7 @@ function itemDesdeRoadmap(i) {
 
 // Alta (a partir de un empleado seleccionado) y edición de un roadmap.
 // Secciones: 1. Datos del colaborador, 2. Tipo, 3. Inducciones, 4. Información útil.
-function FormRoadmap({ empleado, roadmap, catalogo, guardando, onGuardar, onCancelar }) {
+function FormRoadmap({ empleado, roadmap, catalogo, guardando, teamsHabilitado, onGuardar, onCancelar }) {
     const generales = catalogo.filter(c => c.categoria === 'general');
     const especificas = catalogo.filter(c => c.categoria === 'especifica');
     const categoriaPorId = Object.fromEntries(catalogo.map(c => [c.id, c.categoria]));
@@ -195,6 +195,7 @@ function FormRoadmap({ empleado, roadmap, catalogo, guardando, onGuardar, onCanc
                         key={item.key}
                         item={item}
                         index={index}
+                        teamsHabilitado={teamsHabilitado}
                         esPrimera={index === 0}
                         esUltima={index === items.length - 1}
                         onChange={(nuevo) => actualizarItem(index, nuevo)}
@@ -235,6 +236,10 @@ function FormRoadmap({ empleado, roadmap, catalogo, guardando, onGuardar, onCanc
 
                 <div className="ri-info">
                     Podés modificar el orden, fecha, horario, ubicación y facilitador. También podés quitar inducciones o agregar otras según corresponda.
+                    {teamsHabilitado && (
+                        <> Al publicar, cada inducción agenda una reunión de Teams para RRHH (el colaborador no se invita).
+                        Si elegís una sala libre se reserva; si se ocupa antes de guardar, la reunión queda solo por Teams.</>
+                    )}
                 </div>
 
                 <div className="ri-encuesta-card">

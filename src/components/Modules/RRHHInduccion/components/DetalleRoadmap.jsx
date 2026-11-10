@@ -6,11 +6,13 @@ import RoadmapTimeline from './RoadmapTimeline';
 
 // Vista RRHH de un roadmap: seguimiento (inducciones, evaluaciones y encuestas) y resultado
 // de la encuesta de satisfacción.
-function DetalleRoadmap({ roadmap, guardando, onToggleItem, onToggleEvaluacion, onToggleEncuesta1Mes, onEditar, onEliminar }) {
+function DetalleRoadmap({ roadmap, guardando, onToggleItem, onToggleEvaluacion, onToggleEncuesta1Mes, teamsHabilitado,
+                          onReintentarTeams, onEditar, onEliminar }) {
     const tipo = (TIPOS_INDUCCION.find(t => t.value === roadmap.tipo) || {}).label || roadmap.tipo;
     const encuesta = roadmap.encuesta_respuestas;
     const borrador = roadmap.estado === 'borrador';
     const e1m = roadmap.encuesta_1mes;
+    const erroresTeams = roadmap.items.filter(i => i.teams_error).length;
 
     return (
         <div>
@@ -72,6 +74,14 @@ function DetalleRoadmap({ roadmap, guardando, onToggleItem, onToggleEvaluacion, 
 
             <section className="ri-card">
                 <div className="ri-card-titulo">Roadmap</div>
+                {teamsHabilitado && erroresTeams > 0 && (
+                    <div className="ri-alerta ri-alerta-accion">
+                        <span>{erroresTeams === 1 ? 'Una inducción no tiene' : `${erroresTeams} inducciones no tienen`} su reunión de Teams sincronizada.</span>
+                        <button type="button" className="ri-boton-secundario" disabled={guardando} onClick={onReintentarTeams}>
+                            <i className="material-symbols-outlined">sync</i> Reintentar
+                        </button>
+                    </div>
+                )}
                 {borrador && (
                     <div className="ri-alerta">El roadmap está en borrador: publicalo para que el colaborador lo vea y poder registrar inducciones completadas.</div>
                 )}
@@ -83,6 +93,7 @@ function DetalleRoadmap({ roadmap, guardando, onToggleItem, onToggleEvaluacion, 
                     onToggle={borrador ? null : onToggleItem}
                     onToggleEvaluacion={borrador ? null : onToggleEvaluacion}
                     onToggleEncuesta1Mes={borrador ? null : onToggleEncuesta1Mes}
+                    mostrarTeams={teamsHabilitado}
                     deshabilitado={guardando}
                 />
             </section>

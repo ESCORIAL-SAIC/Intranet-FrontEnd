@@ -28,6 +28,7 @@ function RRHHInduccion() {
     const [cargando, setCargando] = useState(false);
     const [guardando, setGuardando] = useState(false);
     const [mensaje, setMensaje] = useState(null);
+    const [teamsHabilitado, setTeamsHabilitado] = useState(false);
 
     const avisar = (tipo, texto) => {
         setMensaje({ tipo, texto });
@@ -47,7 +48,7 @@ function RRHHInduccion() {
             }
             setEsRRHH(rrhh);
             if (rrhh) {
-                await Promise.all([cargarRoadmaps(), cargarCatalogo()]);
+                await Promise.all([cargarRoadmaps(), cargarCatalogo(), cargarConfigTeams()]);
             }
         })();
     }, []);
@@ -62,6 +63,17 @@ function RRHHInduccion() {
             avisar('error', errorDe(err, 'Error obteniendo los roadmaps'));
         }
         setCargando(false);
+    };
+
+    // Si la integración con Teams no está configurada en el backend, no se muestran las salas.
+    const cargarConfigTeams = async () => {
+        try {
+            const response = await axios.get(`${baseURL}/induccion/teams/config`, axiosConfig);
+            setTeamsHabilitado(!!response.data.habilitado);
+        } catch (err) {
+            console.log(err);
+            setTeamsHabilitado(false);
+        }
     };
 
     const cargarCatalogo = async () => {
@@ -133,9 +145,13 @@ function RRHHInduccion() {
                 : await axios.post(`${baseURL}/induccion/roadmaps`, payload, axiosConfig);
             setRoadmap(response.data.roadmap);
             setVista('detalle');
-            avisar('exito', payload.estado === 'publicado'
-                ? 'Checklist publicado. El recorrido ya puede ser consultado por el colaborador desde su Perfil.'
-                : 'Checklist guardado como borrador.');
+            if (response.data.roadmap.items.some(i => i.teams_error)) {
+                avisar('error', 'El roadmap se guardó, pero no se pudieron crear todas las reuniones de Teams. Revisá el detalle.');
+            } else {
+                avisar('exito', payload.estado === 'publicado'
+                    ? `Checklist publicado. El recorrido ya puede ser consultado por el colaborador desde su Perfil.${teamsHabilitado ? ' Las reuniones de Teams quedaron agendadas para RRHH.' : ''}`
+                    : 'Checklist guardado como borrador.');
+            }
         } catch (err) {
             console.log(err);
             avisar('error', errorDe(err, 'Error guardando el roadmap'));
@@ -164,6 +180,22 @@ function RRHHInduccion() {
         actualizarActividad(`/induccion/roadmaps/${roadmap.id}/encuesta-1mes`, roadmap.encuesta_1mes.estado !== 'completada',
             'Error actualizando la encuesta de 1.er mes');
 
+    const reintentarTeams = async () => {
+        setGuardando(true);
+        try {
+            const response = await axios.post(`${baseURL}/induccion/roadmaps/${roadmap.id}/teams/sincronizar`, {}, axiosConfig);
+            setRoadmap(response.data.roadmap);
+            avisar(response.data.roadmap.items.some(i => i.teams_error) ? 'error' : 'exito',
+                response.data.roadmap.items.some(i => i.teams_error)
+                    ? 'Algunas reuniones de Teams siguen con error.'
+                    : 'Reuniones de Teams sincronizadas.');
+        } catch (err) {
+            console.log(err);
+            avisar('error', errorDe(err, 'Error sincronizando las reuniones de Teams'));
+        }
+        setGuardando(false);
+    };
+
     const eliminarRoadmap = async () => {
         if (!window.confirm(`¿Eliminar el roadmap de ${roadmap.nombre_snapshot}? Esta acción no se puede deshacer.`)) return;
         setGuardando(true);
@@ -189,11 +221,13 @@ function RRHHInduccion() {
             case 'form':
                 return <FormRoadmap key={roadmap ? roadmap.id : empleadoSeleccionado.id}
                                     empleado={empleadoSeleccionado} roadmap={roadmap} catalogo={catalogo} guardando={guardando}
+                                    teamsHabilitado={teamsHabilitado}
                                     onGuardar={guardarRoadmap}
                                     onCancelar={() => roadmap ? setVista('detalle') : setVista('seleccion')} />;
             case 'detalle':
                 return <DetalleRoadmap roadmap={roadmap} guardando={guardando} onToggleItem={toggleItem}
                                        onToggleEvaluacion={toggleEvaluacion} onToggleEncuesta1Mes={toggleEncuesta1Mes}
+                                       teamsHabilitado={teamsHabilitado} onReintentarTeams={reintentarTeams}
                                        onEditar={() => setVista('form')} onEliminar={eliminarRoadmap} />;
             default:
                 return <ListadoRoadmaps roadmaps={roadmaps} cargando={cargando} onVer={verRoadmap} onNuevo={irASeleccion} />;
