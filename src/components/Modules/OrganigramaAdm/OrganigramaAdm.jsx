@@ -21,7 +21,7 @@ const OrganigramaAdm = (props) => {
     axios.get(process.env.REACT_APP_BASE_URL+"/perteneceagrupo", {
         headers: {
             Authorization: token,
-            GrupoUsuario: "'rol_intranet_adm'"
+            GrupoUsuario: "'rol_intranet_adm','Direccion'"
         }
     }).then(res => {
       // El CSV no esta en git: en produccion lo sirve nginx desde el servidor,

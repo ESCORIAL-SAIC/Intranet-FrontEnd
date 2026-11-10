@@ -121,3 +121,15 @@
     font-weight: 500;
     max-height: 3vh;
   }
+
+  .organigrama-icon{
+    display: flex;
+    position: absolute;
+    right: 5%;
+    bottom: 4%;
+    align-items: center;
+  }
+
+  .organigrama-cant-sub{
+    margin-left: .2vw;
+  }
