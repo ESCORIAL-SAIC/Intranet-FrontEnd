@@ -91,7 +91,7 @@ function ObjetivosAnuales() {
             return;
         }
         try {
-            const response = await axios.get(`${baseURL}/legajos-empleados`, { headers: { Authorization: token, busqueda: query } });
+            const response = await axios.get(`${baseURL}/objetivos-anuales/empleados`, { ...axiosConfig, params: { q: query.trim() } });
             setEmpleadosResultados(response.data || []);
         } catch (err) {
             console.log(err);

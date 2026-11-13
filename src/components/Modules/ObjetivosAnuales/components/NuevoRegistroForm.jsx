@@ -15,7 +15,7 @@ function NuevoRegistroForm({ empleados, busqueda, onBuscar, onCrear, onCancelar,
         e.preventDefault();
         if (!empleadoId || !anio) return;
         if (!pilaresListosParaGuardar(pilares)) return;
-        onCrear({ empleado_id: Number(empleadoId), anio: Number(anio), evaluador, pilares });
+        onCrear({ empleado_id: empleadoId, anio: Number(anio), evaluador, pilares });
     };
 
     return (
@@ -24,7 +24,7 @@ function NuevoRegistroForm({ empleados, busqueda, onBuscar, onCrear, onCancelar,
                 <div className="oa-person-grid">
                     <div className="oa-field">
                         <label className="oa-field-label">Buscar empleado</label>
-                        <input className="oa-field-input" type="text" value={busqueda} onChange={(e) => onBuscar(e.target.value)} placeholder="Nombre del empleado..." />
+                        <input className="oa-field-input" type="text" value={busqueda} onChange={(e) => onBuscar(e.target.value)} placeholder="Nombre o legajo del empleado..." />
                     </div>
                     <div className="oa-field">
                         <label className="oa-field-label">Empleado seleccionado</label>
