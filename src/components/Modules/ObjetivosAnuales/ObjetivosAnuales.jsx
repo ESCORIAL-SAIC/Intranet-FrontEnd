@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './ObjetivosAnuales.css';
@@ -24,8 +24,6 @@ function ObjetivosAnuales() {
     const [puedeEditar, setPuedeEditar] = useState(false);
     const [guardando, setGuardando] = useState(false);
     const [mensaje, setMensaje] = useState(null);
-    const [empleadosBusqueda, setEmpleadosBusqueda] = useState('');
-    const [empleadosResultados, setEmpleadosResultados] = useState([]);
 
     const avisar = (tipo, texto) => {
         setMensaje({ tipo, texto });
@@ -84,27 +82,29 @@ function ObjetivosAnuales() {
         }
     };
 
-    const buscarEmpleados = async (query) => {
-        setEmpleadosBusqueda(query);
-        if (!query || query.trim().length < 2) {
-            setEmpleadosResultados([]);
-            return;
-        }
+    // Estable entre renders: el selector la usa como dependencia de su efecto de búsqueda.
+    const buscarEmpleados = useCallback(async (query) => {
         try {
-            const response = await axios.get(`${baseURL}/objetivos-anuales/empleados`, { ...axiosConfig, params: { q: query.trim() } });
-            setEmpleadosResultados(response.data || []);
+            const response = await axios.get(`${baseURL}/objetivos-anuales/empleados`, { headers: { Authorization: token }, params: { q: query } });
+            return response.data || [];
         } catch (err) {
             console.log(err);
+            return [];
         }
-    };
+    }, [baseURL, token]);
 
     const crearRegistro = async (payload) => {
         setGuardando(true);
         try {
             const response = await axios.post(`${baseURL}/objetivos-anuales`, payload, axiosConfig);
-            avisar('exito', 'Registro creado correctamente');
+            const creados = response.data.registros || [response.data.registro];
             await cargarRegistros(true);
-            await seleccionarRegistro(response.data.registro.id);
+            if (creados.length === 1) {
+                await seleccionarRegistro(creados[0].id);
+                avisar('exito', 'Registro creado correctamente');
+            } else {
+                avisar('exito', `Se crearon ${creados.length} registros en borrador, uno por empleado`);
+            }
         } catch (err) {
             avisar('error', err.response?.data?.error || 'Error creando el registro');
         } finally {
@@ -189,9 +189,7 @@ function ObjetivosAnuales() {
 
                     {esAdmin && vista === 'nuevo' && (
                         <NuevoRegistroForm
-                            empleados={empleadosResultados}
-                            busqueda={empleadosBusqueda}
-                            onBuscar={buscarEmpleados}
+                            buscarEmpleados={buscarEmpleados}
                             onCrear={crearRegistro}
                             onCancelar={() => setVista('lista')}
                             guardando={guardando}
