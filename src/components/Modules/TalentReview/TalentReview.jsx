@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './TalentReview.css';
 
-import { FASES, ESTADOS_OK } from './constants';
+import { FASES, ESTADOS_OK, URL_ENCUESTA_MI_PERSONA } from './constants';
 import TareaItem from './components/TareaItem';
 import EquipoTabla from './components/EquipoTabla';
 
@@ -140,6 +140,10 @@ export default function TalentReview() {
                             ? `Completado el ${formatearFecha(colaborador.mi_persona.fecha)}.`
                             : 'Tus intereses y aspiraciones de carrera. Todavía no lo completaste.'}
                         estado={colaborador.mi_persona.estado}
+                        accion={{
+                            label: ok(colaborador.mi_persona.estado) ? 'Ver encuesta' : 'Completar encuesta',
+                            onClick: () => window.open(URL_ENCUESTA_MI_PERSONA, '_blank', 'noopener,noreferrer'),
+                        }}
                     />
                 </ul>
             </section>

@@ -24,3 +24,6 @@ export const ESTADOS = {
 };
 
 export const ESTADOS_OK = ['completo', 'cerrado', 'finalizado'];
+
+// Encuesta Mi Persona (Microsoft Forms). Las respuestas llegan a web.formulario_mipersona.
+export const URL_ENCUESTA_MI_PERSONA = 'https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=0ZPJhAHbPE6zcY7y9Dr_rr_QscQyHGNJihfIHVmMVshUQk9aQklXRjdKMUNKOVlVUlhBSTQzNDZKVS4u';
