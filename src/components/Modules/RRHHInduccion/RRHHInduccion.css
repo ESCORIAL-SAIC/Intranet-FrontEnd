@@ -81,6 +81,40 @@
 .ri-evaluacion span { background: #e9f6ec; color: #28733b; padding: 4px 8px; border-radius: 20px; font-weight: 700; }
 .ri-evaluacion a { color: #007eb8; }
 
+/* Agenda del día de las salas (SelectorSala) */
+.ri-agenda-toggle { display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; padding: 0; border: none; background: transparent; color: #007eb8; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.ri-agenda-toggle i { font-size: 16px; }
+.ri-agenda { grid-column: 1 / -1; order: 99; display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border: 1px solid #dbe5ea; border-radius: 9px; background: #fbfdfe; }
+.ri-agenda-fila { display: flex; align-items: center; gap: 12px; width: 100%; padding: 4px 6px; border: 1px solid transparent; border-radius: 7px; background: transparent; font-family: inherit; text-align: left; color: inherit; }
+button.ri-agenda-fila { cursor: pointer; }
+button.ri-agenda-fila:hover:not(:disabled) { background: #eef7fb; }
+button.ri-agenda-fila:disabled { cursor: not-allowed; }
+.ri-agenda-fila.elegida { background: #eef7fb; border-color: #008acb; }
+.ri-agenda-fila.bloqueada .ri-agenda-nombre { color: #84939a; }
+.ri-agenda-sala { width: 210px; flex-shrink: 0; display: flex; flex-direction: column; min-width: 0; }
+.ri-agenda-nombre { font-size: 13px; font-weight: 700; color: #173b50; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ri-agenda-sub { font-size: 11px; color: #84939a; }
+.ri-agenda-libre { color: #28733b; font-weight: 700; }
+.ri-agenda-ocupada { color: #c64c4c; font-weight: 700; }
+.ri-agenda-pista { position: relative; flex: 1; height: 26px; border-radius: 5px; background: #e9f6ec; overflow: hidden; }
+.ri-agenda-escala .ri-agenda-pista { height: 16px; background: transparent; overflow: visible; }
+.ri-agenda-hora { position: absolute; top: 0; transform: translateX(-50%); font-size: 10px; color: #84939a; }
+.ri-agenda-linea { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(23, 59, 80, 0.08); }
+.ri-agenda-ocupacion { position: absolute; top: 0; bottom: 0; background: #e58f8f; }
+.ri-agenda-induccion { position: absolute; top: 2px; bottom: 2px; box-sizing: border-box; border: 2px solid #008acb; border-radius: 4px; background: rgba(0, 138, 203, 0.18); }
+.ri-agenda-induccion.choca { border-color: #c64c4c; background: rgba(198, 76, 76, 0.22); }
+.ri-agenda-leyenda { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 6px; font-size: 11px; color: #4f6875; }
+.ri-agenda-leyenda > span { display: inline-flex; align-items: center; gap: 5px; }
+.ri-agenda-muestra { display: inline-block; width: 14px; height: 10px; border-radius: 3px; }
+.ri-agenda-muestra.ocupada { background: #e58f8f; }
+.ri-agenda-muestra.induccion { box-sizing: border-box; border: 2px solid #008acb; background: rgba(0, 138, 203, 0.18); }
+.ri-agenda-muestra.elegida { box-sizing: border-box; border: 1px solid #008acb; background: #eef7fb; }
+.ri-agenda-ayuda { margin-left: auto; color: #84939a; }
+@media (max-width: 850px) {
+    .ri-agenda-sala { width: 110px; }
+    .ri-agenda-ayuda { margin-left: 0; }
+}
+
 .ri-agregar { display: flex; flex-direction: column; gap: 10px; padding: 14px; border: 2px dashed #a9cbd8; background: #f8fcfd; border-radius: 9px; }
 .ri-agregar-fila { display: flex; gap: 10px; }
 .ri-agregar-fila .ri-input { flex: 1; }

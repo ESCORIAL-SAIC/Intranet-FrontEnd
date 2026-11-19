@@ -42,12 +42,7 @@ function InduccionConfig({ item, index, teamsHabilitado, onChange, onQuitar, onS
                     <label className="ri-label">Ubicación</label>
                     <input className="ri-input" placeholder="Ej. Sala 2" value={item.ubicacion || ''} onChange={set('ubicacion')} />
                 </div>
-                {teamsHabilitado && (
-                    <div>
-                        <label className="ri-label">Sala (reunión Teams)</label>
-                        <SelectorSala item={item} onChange={onChange} />
-                    </div>
-                )}
+                {teamsHabilitado && <SelectorSala item={item} onChange={onChange} />}
                 <div>
                     <label className="ri-label">Facilitador</label>
                     <SelectorEmpleado value={item.facilitador || ''} placeholder="Buscar por nombre o legajo"
