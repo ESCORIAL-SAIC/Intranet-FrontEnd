@@ -32,7 +32,7 @@ function Empleado(){
                 }
             })
             const jsonData = await response.json();
-            setEmpleado(jsonData[0]);        
+            setEmpleado(Array.isArray(jsonData) && jsonData[0] ? jsonData[0] : {});
         } catch (err) {
             console.log(err.message)
         }
@@ -204,7 +204,7 @@ function Empleado(){
         <div className="legajo-empleado">
             <div className="empleado-detalle">
                 <div className="empleado-detalle-left">
-                    <img className="empleado-detalle-img" src={"data:image/png;base64, "+empleado.image} alt="" />
+                    <img className="empleado-detalle-img" src={empleado?.image ? "data:image/png;base64, "+empleado.image : undefined} alt="" />
                     <div className="empleado-detalle-datos">
                         <div className="empleado-nombre">{empleado.nombre}</div>
                         <div className="empleado-legajo">{empleado.legajo}</div>
