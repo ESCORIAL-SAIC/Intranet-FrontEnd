@@ -1,0 +1,83 @@
+/* Paleta tomada de info-prompts/talent-review-proceso-general.html
+   (mismos tonos que NueveBox y RRHHFormularios). */
+
+.tr-container { font-family: 'Inter', sans-serif; color: #16222E; padding-bottom: 4vh; }
+
+.tr-mensaje { background: #fff; border: 1px solid #DCE3EA; border-radius: 10px; padding: 24px; color: #4B5B6B; margin-top: 2vh; }
+.tr-mensaje.error { border-color: #EBB3B8; background: #FDF1F2; color: #BE1E2D; }
+
+/* HERO */
+.tr-hero { background: #0A3D63; color: #fff; border-radius: 12px; padding: 26px 30px; margin: 2vh 0; }
+.tr-eyebrow { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #BFD3E6; margin-bottom: 6px; }
+.tr-hero h1 { font-size: 30px; font-weight: 700; margin: 0; line-height: 1.1; }
+.tr-hero p { color: #BFD3E6; font-size: 14px; margin: 8px 0 0; max-width: 720px; line-height: 1.5; }
+
+/* FASES */
+.tr-fases { list-style: none; display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 0; margin: 0 0 3vh; }
+.tr-fase { display: flex; flex-direction: column; justify-content: center; min-height: 70px; padding: 10px 22px 10px 26px; background: #E4EAF0; color: #7A8896; clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%, 16px 50%); }
+.tr-fase:first-child { clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%); padding-left: 16px; }
+.tr-fase.activa { background: #127BCA; color: #fff; }
+.tr-fase.hecha { background: #0E7C66; color: #fff; }
+.tr-fase.ajena { background: #EEF3F8; color: #7A8896; }
+.tr-fase-n { font-size: 12px; opacity: 0.85; }
+.tr-fase-t { font-size: 15px; font-weight: 700; line-height: 1.15; }
+.tr-fase-s { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+
+/* BLOQUES */
+.tr-bloque { background: #fff; border: 1px solid #DCE3EA; border-radius: 12px; padding: 20px 24px; margin-bottom: 2.5vh; box-shadow: 0 0 8px rgba(0, 0, 0, 0.08); }
+.tr-bloque-siguiente { background: #FAFBFC; }
+.tr-bloque-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.tr-bloque-head h2 { font-size: 18px; font-weight: 700; color: #0A3D63; margin: 0; }
+.tr-bloque-fase { font-size: 12px; color: #7A8896; }
+
+.tr-aviso { display: flex; align-items: center; gap: 10px; background: #EBF3FC; border: 1px solid #B5D4F4; border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 13px; color: #0C447C; }
+.tr-aviso .material-symbols-outlined { font-size: 20px; }
+
+/* CHECKLIST */
+.tr-lista { list-style: none; padding: 0; margin: 0; }
+.tr-tarea { display: grid; grid-template-columns: 32px 1fr auto; gap: 14px; align-items: center; padding: 14px 4px; border-bottom: 1px solid #EEF2F6; }
+.tr-tarea:last-child { border-bottom: none; }
+.tr-tarea-check { font-size: 26px; color: #127BCA; }
+.tr-tarea.hecha .tr-tarea-check { color: #0E7C66; }
+.tr-tarea.inactiva .tr-tarea-check { color: #B3BEC9; }
+.tr-tarea-titulo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 15px; font-weight: 600; }
+.tr-tarea-desc { font-size: 13px; color: #4B5B6B; margin: 3px 0 0; line-height: 1.45; }
+.tr-tarea.inactiva .tr-tarea-titulo { color: #7A8896; }
+
+.tr-progreso { display: flex; align-items: center; gap: 10px; margin-top: 8px; max-width: 360px; }
+.tr-progreso-barra { flex: 1; height: 6px; background: #EEF2F6; border-radius: 999px; overflow: hidden; }
+.tr-progreso-barra span { display: block; height: 100%; background: #127BCA; border-radius: 999px; }
+.tr-tarea.hecha .tr-progreso-barra span { background: #0E7C66; }
+.tr-progreso-txt { font-size: 12px; color: #4B5B6B; white-space: nowrap; }
+
+.tr-sublista { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tr-sublista a { font-size: 12px; color: #127BCA; text-decoration: none; border: 1px solid #A9CDEB; background: #EEF6FC; border-radius: 999px; padding: 2px 10px; }
+.tr-sublista a:hover { background: #DCEBF8; }
+
+.tr-btn { background: #127BCA; color: #fff; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+.tr-btn:hover { background: #0A3D63; }
+.tr-btn:disabled { background: #DCE3EA; color: #7A8896; cursor: not-allowed; }
+
+/* CHIPS */
+.tr-chip { font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: 999px; white-space: nowrap; }
+.tr-chip-ok { background: #E3F4EE; color: #0E7C66; }
+.tr-chip-pend { background: #FDF1F2; color: #BE1E2D; }
+.tr-chip-prog { background: #EEF6FC; color: #127BCA; }
+.tr-chip-off { background: #EEF2F6; color: #7A8896; }
+
+/* TABLA EQUIPO */
+.tr-tabla-wrap { overflow-x: auto; }
+.tr-tabla { width: 100%; border-collapse: collapse; min-width: 760px; }
+.tr-tabla th { text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #7A8896; padding: 8px 12px; border-bottom: 1px solid #DCE3EA; }
+.tr-tabla td { padding: 10px 12px; font-size: 13px; border-bottom: 1px solid #EEF2F6; vertical-align: middle; }
+.tr-tabla a { text-decoration: none; }
+.tr-tabla-nombre { font-weight: 600; }
+.tr-tabla-puesto { font-size: 12px; color: #7A8896; }
+.tr-tabla-nota { color: #BE1E2D; }
+
+@media (max-width: 1000px) {
+    .tr-fases { grid-template-columns: 1fr; }
+    .tr-fase, .tr-fase:first-child { clip-path: none; border-radius: 8px; padding-left: 16px; }
+    .tr-tarea { grid-template-columns: 28px 1fr; }
+    .tr-tarea .tr-btn { grid-column: 2; justify-self: start; }
+}

@@ -8,6 +8,7 @@ import Main from './components/Modules/Main/Main';
 import Login from './components/Login/Login';
 import CircuitoCompras from './components/Modules/CircuitoCompras/CircuitoCompras';
 import OrganigramaAdm from './components/Modules/OrganigramaAdm/OrganigramaAdm';
+import OrganigramaGer from './components/Modules/OrganigramaGer/OrganigramaGer';
 import OrganigramaAdmRF from './components/Modules/OrganigramaAdmRF/OrganigramaAdmRF';
 import CargaComunicaciones from './components/Modules/CargaComunicaciones/CargaComunicaciones';
 import CargaObjetivosGer from './components/Modules/CargaObjetivosGer/CargaObjetivosGer';
@@ -32,6 +33,8 @@ import ObjetivosAnuales from './components/Modules/ObjetivosAnuales/ObjetivosAnu
 import AsistentesRRHH from './components/Modules/AsistentesRRHH/AsistentesRRHH';
 import RRHHFormularios from './components/Modules/RRHHFormularios/RRHHFormularios';
 import RRHHInduccion from './components/Modules/RRHHInduccion/RRHHInduccion';
+import EstructuraProductos from './components/Modules/EstructuraProductos/EstructuraProductos';
+import TalentReview from './components/Modules/TalentReview/TalentReview';
 
 
 function App() {
@@ -50,6 +53,7 @@ function App() {
           <Route path="/archive-explorer" element={<div className='m-container'><MenuBar/><ArchiveExplorer/></div>}></Route>
           <Route path="/organigrama" element={<div className='m-container'><MenuBar/><Organigrama/></div>}></Route>
           <Route path="/organigrama-adm" element={<div className='m-container'><MenuBar/><OrganigramaAdm/></div>}></Route>
+          <Route path="/organigrama-ger" element={<div className='m-container'><MenuBar/><OrganigramaGer/></div>}></Route>
           <Route path="/organigrama-adm-rf" element={<div className='m-container'><MenuBar/><OrganigramaAdmRF/></div>}></Route>
           <Route path="/circuito-compras" element={<div className='m-container'><MenuBar/><CircuitoCompras/></div>}></Route>
           <Route path="/carga-comunicaciones" element={<div className='m-container'><MenuBar/><CargaComunicaciones/></div>}></Route>
@@ -74,6 +78,8 @@ function App() {
           <Route path="/asistentes-rrhh" element={<div className='m-container'><MenuBar/><AsistentesRRHH/></div>}></Route>
           <Route path="/rrhh-formularios" element={<div className='m-container'><MenuBar/><RRHHFormularios/></div>}></Route>
           <Route path="/rrhh-induccion" element={<div className='m-container'><MenuBar/><RRHHInduccion/></div>}></Route>
+          <Route path="/estructura-productos" element={<div className='m-container'><MenuBar/><EstructuraProductos/></div>}></Route>
+          <Route path="/talent-review" element={<div className='m-container'><MenuBar/><TalentReview/></div>}></Route>
         </Routes>
       </div>    
       

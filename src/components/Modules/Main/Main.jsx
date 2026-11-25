@@ -16,6 +16,9 @@ import RegistroEstudios from '../../Varios/RegistroEstudios/RegistroEstudios';
 import BotonAccesoRegistroEstudios from '../../Varios/RegistroEstudios/BotonAccesosRegistroEstudios';
 import ListadoObjetivosGer from './ListadoObjetivosGer';
 
+// Solapa Objetivos Gerencias deshabilitada temporalmente. Poner en true para volver a mostrarla.
+const MOSTRAR_OBJETIVOS_GERENCIAS = false;
+
 function Main(){
 
     let navigate = useNavigate()
@@ -76,7 +79,7 @@ function Main(){
                     
                     <MainCapacitaciones/>
                     <ListadoComunicaciones/>
-                    <ListadoObjetivosGer/>
+                    {MOSTRAR_OBJETIVOS_GERENCIAS && <ListadoObjetivosGer/>}
                 </div>
                 <div className='right-container'>
                     {

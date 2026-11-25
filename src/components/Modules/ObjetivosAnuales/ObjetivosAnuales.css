@@ -144,3 +144,19 @@ table.oa-registro-list { width: 100%; border-collapse: collapse; }
 @media (max-width: 720px) {
     .oa-person-grid, .oa-scale-ref, .oa-breakdown-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* SELECTOR DE EMPLEADOS (buscador único, multi-selección) */
+.oa-field-empleados { grid-column: 1 / -1; }
+.oa-emp-selector { position: relative; }
+.oa-emp-box { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 36px; border: 1px solid #D3D1C7; border-radius: 6px; padding: 4px 8px; background: #FAFAF8; cursor: text; }
+.oa-emp-box:focus-within { border-color: #127BCA; background: #fff; }
+.oa-emp-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; background: #EEF6FC; color: #0A3D63; border: 1px solid #A9CDEB; border-radius: 999px; padding: 2px 4px 2px 10px; }
+.oa-emp-chip button { border: none; background: none; color: #127BCA; font-size: 15px; line-height: 1; cursor: pointer; padding: 0 4px; border-radius: 999px; }
+.oa-emp-chip button:hover { background: #DCEBF8; }
+.oa-emp-input { flex: 1; min-width: 180px; border: none; outline: none; background: transparent; font-size: 13px; font-family: inherit; color: #1A1916; padding: 4px 2px; }
+.oa-emp-opciones { position: absolute; z-index: 20; top: calc(100% + 4px); left: 0; right: 0; max-height: 280px; overflow-y: auto; list-style: none; margin: 0; padding: 4px 0; background: #fff; border: 1px solid #D3D1C7; border-radius: 8px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12); }
+.oa-emp-opciones li { display: flex; flex-direction: column; padding: 7px 12px; cursor: pointer; }
+.oa-emp-opciones li.resaltado { background: #EEF6FC; }
+.oa-emp-opciones li.oa-emp-info { cursor: default; color: #888780; font-size: 12px; }
+.oa-emp-nombre { font-size: 13px; color: #1A1916; }
+.oa-emp-puesto { font-size: 11px; color: #888780; }

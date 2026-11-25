@@ -38,6 +38,11 @@
     width: 14.5vw;
 }
 
+/* Mantiene el mismo aspecto que el botón de ListadoCVs (ver .listado-cv-boton.show). */
+.listado-estudio-boton.show{
+    display: block !important;
+}
+
 .listado-estudio-boton{
     font-size: 1.4vh;
     margin: 2vh 0vh;
