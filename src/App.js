@@ -32,6 +32,7 @@ import NueveBox from './components/Modules/NueveBox/NueveBox';
 import ObjetivosAnuales from './components/Modules/ObjetivosAnuales/ObjetivosAnuales';
 import AsistentesRRHH from './components/Modules/AsistentesRRHH/AsistentesRRHH';
 import RRHHFormularios from './components/Modules/RRHHFormularios/RRHHFormularios';
+import RRHHInduccion from './components/Modules/RRHHInduccion/RRHHInduccion';
 import EstructuraProductos from './components/Modules/EstructuraProductos/EstructuraProductos';
 import TalentReview from './components/Modules/TalentReview/TalentReview';
 
@@ -76,6 +77,7 @@ function App() {
           <Route path="/objetivos-anuales" element={<div className='m-container'><MenuBar/><ObjetivosAnuales/></div>}></Route>
           <Route path="/asistentes-rrhh" element={<div className='m-container'><MenuBar/><AsistentesRRHH/></div>}></Route>
           <Route path="/rrhh-formularios" element={<div className='m-container'><MenuBar/><RRHHFormularios/></div>}></Route>
+          <Route path="/rrhh-induccion" element={<div className='m-container'><MenuBar/><RRHHInduccion/></div>}></Route>
           <Route path="/estructura-productos" element={<div className='m-container'><MenuBar/><EstructuraProductos/></div>}></Route>
           <Route path="/talent-review" element={<div className='m-container'><MenuBar/><TalentReview/></div>}></Route>
         </Routes>

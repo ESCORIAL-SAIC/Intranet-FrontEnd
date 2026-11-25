@@ -1,0 +1,30 @@
+.mi-induccion{
+    margin-top: 10vh;
+    font-family: 'Inter', sans-serif;
+}
+
+.mi-induccion-titulo{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.mi-induccion-resumen{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #008acb;
+}
+
+.mi-induccion-bienvenida{
+    margin: 0 0 16px;
+    font-size: 24px;
+    color: #173b50;
+}
+
+.mi-induccion-datos{
+    margin-bottom: 18px;
+}
