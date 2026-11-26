@@ -7,6 +7,30 @@
   font-size: 13px;
 }
 
+.alerta-credenciales{
+  width: 20vw;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  margin-bottom: 5px;
+  border: 1px solid #fd4b4b;
+  border-radius: 12px;
+  background-color: #fff0f0;
+  color: #d62f2f;
+  font-family: 'Roboto';
+  font-weight: 600;
+  font-size: 13px;
+  text-align: center;
+}
+
+.input-error{
+  border-color: #fd4b4b !important;
+}
+
+.login-button:disabled{
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .input-login-contra, .input-login-usuario{
     margin-top: 5px;
     border: 2px solid var(--main-esco-color);
