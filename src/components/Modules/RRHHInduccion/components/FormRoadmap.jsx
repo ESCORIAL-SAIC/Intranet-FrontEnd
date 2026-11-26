@@ -57,9 +57,8 @@ function FormRoadmap({ empleado, roadmap, catalogo, guardando, teamsHabilitado, 
         tutor_rrhh: '',
     });
     const [tipo, setTipo] = useState(roadmap ? roadmap.tipo : 'estandar');
-    const [items, setItems] = useState(() => roadmap
-        ? roadmap.items.map(itemDesdeRoadmap)
-        : generales.map(itemDesdeCatalogo));
+    // Un roadmap nuevo arranca sin inducciones: RRHH agrega las que correspondan.
+    const [items, setItems] = useState(() => roadmap ? roadmap.items.map(itemDesdeRoadmap) : []);
     const [infoUtil, setInfoUtil] = useState(roadmap ? roadmap.info_util : {});
     const [agregarId, setAgregarId] = useState('');
     const [nombreNueva, setNombreNueva] = useState('');
@@ -183,12 +182,16 @@ function FormRoadmap({ empleado, roadmap, catalogo, guardando, teamsHabilitado, 
                     ))}
                 </div>
                 <div className="ri-info">
-                    El checklist se genera a partir del tipo seleccionado y puede ser personalizado por RRHH antes de su publicación.
+                    El tipo define qué inducciones del catálogo se pueden agregar (las específicas son solo para Jefatura).
                 </div>
             </section>
 
             <section className="ri-card">
                 <div className="ri-card-titulo">3. Configurar inducciones</div>
+
+                {items.length === 0 && (
+                    <div className="ri-vacio">Todavía no hay inducciones. Agregalas desde el catálogo o creá una nueva.</div>
+                )}
 
                 {items.map((item, index) => (
                     <InduccionConfig
