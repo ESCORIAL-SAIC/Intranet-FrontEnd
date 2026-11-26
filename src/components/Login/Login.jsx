@@ -4,17 +4,16 @@ import { useNavigate } from 'react-router';
 import axios from 'axios';
 import logo from '../../img/logo.png';
 
-
+const REGEX_CARACTERES = new RegExp("^[a-zA-Z0-9_-ñ-Ñ]*$");
 
 function Login() {
     let navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const errorContra = document.getElementById('error-contra')
-    const errorUsuario = document.getElementById('error-usuario')
-    const errorCredenciales = document.getElementById('error-credenciales')
-    const usuario = document.getElementById('username')
-    const contra = document.getElementById('password')
+    const [errorUsuario, setErrorUsuario] = useState('');
+    const [errorContra, setErrorContra] = useState('');
+    const [errorCredenciales, setErrorCredenciales] = useState('');
+    const [cargando, setCargando] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -23,81 +22,104 @@ function Login() {
                 Authorization: token,
             }
         }).then(res => {
-            //console.log(res)
             navigate('/')
         }).catch(err => {
-            //console.log(err);
             navigate('/login')
         })
 
     }, [])
 
-    const submit = () => {
-        if (validarCredenciales()){
-            axios.post(process.env.REACT_APP_BASE_URL+"/login", {username, password, 
-            headers: {
-                "access-control-allow-origin": "*"
-            }
-            }).then(user => {
-                localStorage.setItem('token', user.data.token)
-                navigate('/')
-            }).catch(err => {
-                //errorCredenciales.innerText = err.response.data.message
-                console.log(JSON.parse(JSON.stringify(err)))
-            })
+    const validarCampo = (valor, nombre) => {
+        if (valor.length < 3 || valor.length > 20) {
+            return `${nombre} debe tener entre 3 a 20 caracteres`;
         }
+        if (!REGEX_CARACTERES.test(valor)) {
+            return "No se permiten caracteres especiales";
+        }
+        return '';
     }
 
     const validarCredenciales = () => {
-        let regexp = new RegExp("^[a-zA-Z0-9_-ñ-Ñ]*$")
-        let flag = true
+        const errUsuario = validarCampo(username.trim(), "El usuario");
+        const errContra = validarCampo(password, "La contraseña");
+        setErrorUsuario(errUsuario);
+        setErrorContra(errContra);
+        return !errUsuario && !errContra;
+    }
 
-        if(usuario.value.length < 3 || usuario.value.length > 20){
-            errorUsuario.innerText = "El usuario debe tener entre 3 a 20 caracteres"
-            flag = false
-        }
-        else{
-            if(!regexp.test(usuario.value)){
-                errorUsuario.innerText = "No se permiten caracteres especiales"
-                flag = false
-            }
-            else{
-                errorUsuario.innerText = ""
-            }
-        }
-        if(contra.value.length < 3 || contra.value.length > 20){
-            errorContra.innerText = "La contraseña debe tener entre 3 a 20 caracteres"
-            flag = false
-        }
-        else{
-            if(!regexp.test(contra.value)){
-                errorContra.innerText = "No se permiten caracteres especiales"
-                flag = false
-            }
-            else{
-                errorContra.innerText = ""
-            }
-        }
-        
-        return flag;
+    const submit = (event) => {
+        event.preventDefault();
+        if (cargando) return;
+        setErrorCredenciales('');
+
+        if (!validarCredenciales()) return;
+
+        setCargando(true);
+        axios.post(process.env.REACT_APP_BASE_URL+"/login", { username: username.trim(), password })
+            .then(user => {
+                localStorage.setItem('token', user.data.token)
+                navigate('/')
+            })
+            .catch(err => {
+                if (err.response && err.response.status === 401) {
+                    setErrorCredenciales("Usuario o contraseña incorrectos");
+                    setPassword('');
+                } else if (err.response) {
+                    setErrorCredenciales("Ocurrió un error al iniciar sesión. Intentá nuevamente más tarde.");
+                } else {
+                    setErrorCredenciales("No se pudo conectar con el servidor. Verificá tu conexión.");
+                }
+            })
+            .finally(() => setCargando(false));
     }
 
     return (
         <div className="primary-container">
                 <div className="login-container">
-                    <div className='input-login-container'>
+                    <form className='input-login-container' onSubmit={submit} noValidate>
                         <img className='img-logo-login' src={logo} alt="" />
-                        <p className="error-credenciales" id="error-credenciales"></p>
-                        <input type="text" name="username" placeholder="Usuario" id="username" className="input-login-usuario" value={username} onChange={event => setUsername(event.target.value)}/>
-                        <p className="error-usuario" id="error-usuario"></p>
-                        <input type="password" name="password" placeholder="Contraseña" id="password" className="input-login-contra" value={password} onChange={event => setPassword(event.target.value)}/>
-                        <p className="error-contra" id="error-contra"></p>
-                        <button className='login-button' onClick={submit}>ACCEDER</button>
-                    </div>
-                    <div className='logo-container'><img className='img-logo-h' src={logo} alt="" /><h1 className="login-text">BIENVENIDO A LA INTRANET ESCORIAL 2.0</h1></div>                   
-                </div> 
+                        {errorCredenciales && (
+                            <div className="alerta-credenciales" role="alert">{errorCredenciales}</div>
+                        )}
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Usuario"
+                            id="username"
+                            autoComplete="username"
+                            autoFocus
+                            className={`input-login-usuario${errorUsuario || errorCredenciales ? ' input-error' : ''}`}
+                            value={username}
+                            onChange={event => {
+                                setUsername(event.target.value);
+                                setErrorUsuario('');
+                                setErrorCredenciales('');
+                            }}
+                        />
+                        <p className="error-usuario">{errorUsuario}</p>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Contraseña"
+                            id="password"
+                            autoComplete="current-password"
+                            className={`input-login-contra${errorContra || errorCredenciales ? ' input-error' : ''}`}
+                            value={password}
+                            onChange={event => {
+                                setPassword(event.target.value);
+                                setErrorContra('');
+                                setErrorCredenciales('');
+                            }}
+                        />
+                        <p className="error-contra">{errorContra}</p>
+                        <button type="submit" className='login-button' disabled={cargando}>
+                            {cargando ? 'INGRESANDO...' : 'ACCEDER'}
+                        </button>
+                    </form>
+                    <div className='logo-container'><img className='img-logo-h' src={logo} alt="" /><h1 className="login-text">BIENVENIDO A LA INTRANET ESCORIAL 2.0</h1></div>
+                </div>
             </div>
     );
-}   
+}
 
 export default Login;
